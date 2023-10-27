@@ -1,1 +1,43 @@
+server:
+  port: 8081
 
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: jjs
+    password: 9382
+    url: jdbc:mysql://localhost:3306/sangsang?autoReconnect=true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none # hibernate 사용 설정
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+  data:
+    web:
+      pageable:
+        default-page-size: 10 #페이지 사이즈(default)
+        max-page-size: 50 # max 사이즈
+
+  profiles:
+    active: local
+
+jwt:
+  secret: 1LxrVXYDdRoBBa2Wc9lfOLVUl9BXt6JEZEhkm1mLY04lbjIx4I18x4QOha7cSKrCQJCKwpavnVtfVzFPnBzJfQ==
+  access-token-expired: 43200 # 12시간
+  refresh-token-expired: 43200 # 12시간
+
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
