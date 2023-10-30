@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
@@ -19,36 +20,38 @@ public class MemberDetailImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> member.getAuthority().toString());
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return member.getMemberPwd();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return member.getMemberId();
     }
 
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() { // 계정 만료여부
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() { // 계정이 잠겨있는지
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() { // 패스워드가 만료되었는지
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() { // 사용가능한 계정인지
         return true;
     }
 }

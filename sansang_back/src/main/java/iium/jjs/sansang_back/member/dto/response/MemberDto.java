@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 //member 조회용  dto
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class MemberDto {
 
@@ -45,5 +46,18 @@ public class MemberDto {
         this.auth = auth;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
+    }
+
+    public MemberDto(Member member){
+        this.memberId = member.getMemberId();
+        this.memberPwd = member.getMemberPwd();
+        this.memberName = member.getMemberName();
+        this.zipCode = member.getAddress().getZipCode();
+        this.address = member.getAddress().getAddress();
+        this.addressDetail = member.getAddress().getAddressDetail();
+        this.profile =  member.getProfile();
+        this.auth = member.getAuthority().toString();
+        this.createdAt = member.getCreatedAt();
+        this.deletedAt = member.getDeletedAt();
     }
 }

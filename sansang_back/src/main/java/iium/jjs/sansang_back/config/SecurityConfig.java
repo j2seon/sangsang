@@ -67,9 +67,8 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and() // 인증
                 .authorizeRequests()
-                .anyRequest().permitAll() //일단 전체 허용
-                .and()
-                ;
+                .anyRequest().permitAll() //
+                .and();
         
         return http.build();
     }

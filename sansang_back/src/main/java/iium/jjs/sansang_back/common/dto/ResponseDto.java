@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseDto {
 
     private int status;
