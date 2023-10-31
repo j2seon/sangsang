@@ -1,4 +1,4 @@
-package iium.jjs.sansang_back.jwt;
+package iium.jjs.sansang_back.jwt.dto;
 
 import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import lombok.*;
@@ -15,6 +15,6 @@ public class TokenDto {
     private String auth; // 권한
     private String memberId; // 회원 아이디
     private String accessToken; // 엑세스 토큰
-    private Long accessTokenExpiredTime; // 엑세스 토큰 만료 시간
+//    private Long accessTokenExpiredTime; // 엑세스 토큰 만료 시간
 
 }

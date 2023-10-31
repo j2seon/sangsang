@@ -1,0 +1,41 @@
+### 회원가입 / 회원 등록
+POST http://localhost:8081/api/v1/member/join
+Content-Type: application/json
+Accept: */*
+Access-Control-Allow-Origin: *
+
+{
+  "memberId": "admin",
+  "memberPwd": "admin",
+  "memberName": "admin",
+  "zipCode": "1212",
+  "address": "대전",
+  "addressDetail": "예시",
+  "profile": "default.jpg"
+}
+
+### 전체직원조회
+GET http://localhost:8081/api/v1/member/members
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg3NzM3ODksInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODczMDU4OSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.gNOE4eWBMeXla2UfDejalYxV05kgeXzB6pi6qb_eDzQSL83DBx3zwBWYGO2zLpPmk1Xl2-sdu8baIps34dCWeQ
+
+### 한명조회
+GET http://localhost:8081/api/v1/member/admin
+Accept: */*
+
+### 회원정보 수정
+PATCH http://localhost:8081/api/v1/member/admin
+Content-Type: application/json
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg3ODY2NTgsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODc0MzQ1OCwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.CH03-AWJN0WZzb6gQj7-2O_s4szTmdL3NsWnRt-_JVdUzu87bCkfApp1E77UowPstJF9VJDFkD2LcMwMDUg_ag
+
+{
+  "memberPwd": "admin",
+  "memberName": "admin",
+  "zipCode": "3333",
+  "address": "대전",
+  "addressDetail": "예시",
+  "profile": "default.jpg"
+}
+
+

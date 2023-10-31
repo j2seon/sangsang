@@ -3,6 +3,7 @@ package iium.jjs.sansang_back.member.service;
 import iium.jjs.sansang_back.exception.NotFountMemberException;
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
+import iium.jjs.sansang_back.member.dto.request.MemberInfoDto;
 import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import iium.jjs.sansang_back.member.entity.Address;
 import iium.jjs.sansang_back.member.entity.Authority;
@@ -67,6 +68,19 @@ public class MemberService {
         return new MemberDto(member);
     }
 
+    // 회원정보수정
+    @Transactional
+    public MemberDto updateMemberInfo(String memberId, MemberInfoDto memberInfoDto){
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFountMemberException("해당 회원이 존재하지 않습니다"));
+
+        // 이거만 따로 정리하기
+        member.setMemberPwd(passwordEncoder.encode(memberInfoDto.getMemberPwd()));
+        member.setAddress(new Address(memberInfoDto.getZipCode(), memberInfoDto.getAddress(), memberInfoDto.getAddressDetail()));
+        member.setProfile(memberInfoDto.getProfile());
+        member.setMemberName(memberInfoDto.getMemberName());
+
+        return new MemberDto(member);
+    }
 
 
 }

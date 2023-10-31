@@ -26,13 +26,17 @@ spring:
         default-page-size: 10 #페이지 사이즈(default)
         max-page-size: 50 # max 사이즈
 
+  redis:
+    port: 6379
+    host: localhost
+
   profiles:
     active: local
 
 jwt:
   secret: 1LxrVXYDdRoBBa2Wc9lfOLVUl9BXt6JEZEhkm1mLY04lbjIx4I18x4QOha7cSKrCQJCKwpavnVtfVzFPnBzJfQ==
-  access-token-expired: 43200 # 12시간
-  refresh-token-expired: 43200 # 12시간
+  access-token-expired: 43200
+  refresh-token-expired: 1209600
 
 logging:
   level:

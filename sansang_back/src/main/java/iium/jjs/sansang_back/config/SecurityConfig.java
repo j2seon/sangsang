@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and() // 인증
                 .authorizeRequests()
+                .antMatchers("/api/v1/member/*").hasRole("ADMIN")
                 .anyRequest().permitAll() //
                 .and();
         

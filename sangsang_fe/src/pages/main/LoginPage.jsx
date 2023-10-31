@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Error() {
+function LoginPage() {
     return (
         <div></div>
     );
 }
 
-export default Error;
+export default LoginPage;

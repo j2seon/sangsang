@@ -1,6 +1,8 @@
 package iium.jjs.sansang_back.member.entity;
 
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
+import iium.jjs.sansang_back.member.dto.request.MemberInfoDto;
+import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -48,7 +50,6 @@ public class Member {
 
     @Column(name = "MEMBER_PROFILE")
     private String profile;
-
 
 
 }

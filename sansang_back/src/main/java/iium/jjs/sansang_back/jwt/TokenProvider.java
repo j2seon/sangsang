@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.jwt;
 
 import iium.jjs.sansang_back.exception.TokenException;
+import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
 import io.jsonwebtoken.*;
@@ -17,15 +18,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Date;
 
-import static iium.jjs.sansang_back.jwt.JwtFilter.AUTHORIZATION_HEADER;
 
 @Slf4j
 @Component
 public class TokenProvider {
-
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORITIES_KEY = "auth"; // 권한이름
     private static final String BEARER_TYPE = "Bearer "; // 토큰 타입
     private static final String MEMBER_ID = "memberId"; // 토큰 타입
@@ -37,19 +38,19 @@ public class TokenProvider {
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
                          @Value("${jwt.access-token-expired}") long accessTokenExpiredTime,
                          @Value("${jwt.refresh-token-expired}") long refreshTokenExpiredTime,
-                         UserDetailsService userDetailsService) {
+                         UserDetailsService userDetailsService
+                         ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpiredTime = accessTokenExpiredTime;
-        this.refreshTokenExpiredTime = refreshTokenExpiredTime;
+        this.accessTokenExpiredTime = accessTokenExpiredTime * 1000;
+        this.refreshTokenExpiredTime = refreshTokenExpiredTime * 1000;
         this.userDetailsService = userDetailsService;
-
     }
 
     // 엑세스 토큰 생성
     public String createAccessToken(Member member){
         log.info("[TokenProvider] createAccessToken =======");
-
+        log.info("[TokenProvider] accessTokenExpiredTime ={}=======",accessTokenExpiredTime);
         return Jwts.builder()
                 .setExpiration(
                         new Date(System.currentTimeMillis() + accessTokenExpiredTime)
@@ -86,10 +87,11 @@ public class TokenProvider {
         String memberId = claims.get(MEMBER_ID).toString();
 
         MemberDetailImpl userDetails = (MemberDetailImpl) userDetailsService.loadUserByUsername(memberId);
-        log.info("[TokenProvider] userDetails: ${}===== ", userDetails);
+        log.info("[TokenProvider] userDetails: ${}/===== ", userDetails);
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
 
     // AccessToken에서 클레임 추출
     private Claims parseClaims(String token) {
@@ -103,17 +105,21 @@ public class TokenProvider {
     // 토큰 확인
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+
+        log.info("===== bearerToken 토큰확인  = {}======", bearerToken);
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
             return bearerToken.substring(7);
         }
         return null;
     }
 
-    // access 토큰 유효성 검사
-    public boolean validateToken(String accessToken) {
+
+        // 토큰 유효성 검사
+    public boolean validateToken(String token) {
 
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             log.info("[TokenProvider] 만료된 JWT 토큰입니다.");

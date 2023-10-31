@@ -1,0 +1,25 @@
+### 로그인
+POST http://localhost:8081/auth/login
+Content-Type: application/json
+Accept: */*
+Access-Control-Allow-Origin: *
+
+{
+  "id": "admin",
+  "pwd": "admin"
+
+}
+
+### 로그아웃
+POST http://localhost:8081/auth/logout
+Content-Type: application/json
+Accept: */*
+Access-Control-Allow-Origin: *
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg3ODQyMjUsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODc0MTAyNSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.hvfbmQ8TrkalYE7OQNpop0OR_s_5w9GeH_h6c2c-JeM8Ge01nk0dx0j5T4hQ17FhJjNd_KTsENOsljeWMRD-ew
+
+### 토큰 재발급
+POST http://localhost:8081/auth/reissue
+Content-Type: application/json
+Accept: */*
+Access-Control-Allow-Origin: *
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg3NzM3ODksInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODczMDU4OSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.gNOE4eWBMeXla2UfDejalYxV05kgeXzB6pi6qb_eDzQSL83DBx3zwBWYGO2zLpPmk1Xl2-sdu8baIps34dCWeQ

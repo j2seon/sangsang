@@ -1,10 +1,11 @@
 import React from 'react';
 
-
-export default function Layouts() {
+function Error() {
     return (
         <div>
 
         </div>
     );
 }
+
+export default Error;
