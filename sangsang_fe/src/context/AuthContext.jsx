@@ -8,11 +8,15 @@ export const AuthContextProvider = ({children}) => {
     
     // 유저 내용 담기
     const [user, setUser] = useState({
-        //token: localStorage.getItem("ACCESS_TOKEN"),
-        token: 'z',
-        auth: "",
+        isAuthenticated: true,
+        auth: "ROLE_",
         memberId: "임시",
     });
+
+    useEffect(()=>{
+
+    }, []);
+
 
 
     return(<AuthContext.Provider value={{user, login, logout}}>

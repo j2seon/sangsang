@@ -1,10 +1,14 @@
 import {Navigate} from "react-router-dom";
+import {useAuth} from "../context/AuthContext";
 
-const ProtectedRoute = ({ auth, children }) => {
+const ProtectedRoute = ({ children }) => {
+    const { user } = useAuth();
 
-    if (auth !== 'ROLE_ADMIN') {
-        return <Navigate to="/dashboard" />;
+    if (!user || user.auth !== 'ROLE_ADMIN') {
+        return <Navigate to="/" />;
     }
 
     return children;
 };
+
+export default ProtectedRoute;
