@@ -1,0 +1,105 @@
+html, body{
+    width: 100vw;
+    height: 100vh;
+}
+
+html {
+    font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic, 'Malgun Gothic', sans-serif;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+body {
+    background: var(--fc-color-background);
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+article, aside, details, figcaption, figure, footer, hgroup, menu, nav, section {
+    display: block;
+}
+div, span, article, section, header, footer, aside, p, ul, li, fieldset, legend, label, a, nav, form {
+    box-sizing: border-box;
+}
+ol, ul, li {
+    list-style: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    border: 0;
+}
+button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--fc-color-text-title);
+}
+
+main{
+    overflow-y: auto;
+}
+
+/* 색상 기본 */
+:root{
+    --fc-color-hard : #6CE5FF;
+    --fc-color-black : #000000;
+    --fc-color-text-title: #535353;
+    --fc-color-text-content: #757575;
+    --fc-color-border: #C7C7C7;
+    --fc-color-bg-button : #e3ddfe;
+    --fc-color-background : #F8F8F8;
+    --fc-color-alert: #FF6767;
+    --fc-color-success : #36D99E;
+    --fc-button-cancle : #A2A3A3;
+    --fc-button-cancle-hard: #7f7f7f;
+    --fc-button-bg-color: #6CE5FF;
+    --fc-button-border-color: #6CE5FF;
+    --fc-button-active-bg-color: #6CE5FF;
+    --fc-button-active-border-color: #6CE5FF;
+    --fc-buttom-bg-color: #FFFFFF
+}
+
+
+::-webkit-scrollbar{
+    right: 0;
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track{
+    background: transparent;
+    border-radius: 10px;
+    right: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--fc-color-hard);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.wrapper{
+    width: 100%;
+    height: 100%;
+}
+
+
+@media (max-width: 1280px){
+
+}

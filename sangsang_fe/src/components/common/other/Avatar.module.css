@@ -1,0 +1,11 @@
+.avatar_wrap{
+    display: flex;
+    width: 40px;
+    height: 50px;
+    background-position: center;
+    align-items: center;
+}
+
+.img{
+    border-radius: 100%;
+}

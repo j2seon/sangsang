@@ -1,14 +1,21 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
+import {login, logout} from "../api/auth/authApi";
 
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({children}) => {
-    const [auth, setAuth ] = useState(); // 권한 관련
+    
+    // 유저 내용 담기
+    const [user, setUser] = useState({
+        //token: localStorage.getItem("ACCESS_TOKEN"),
+        token: 'z',
+        auth: "",
+        memberId: "임시",
+    });
 
-    // 사용자 인증 및 권한 체크 로직 작성
 
-    return(<AuthContext.Provider>
+    return(<AuthContext.Provider value={{user, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

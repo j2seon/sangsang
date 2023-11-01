@@ -1,7 +1,9 @@
 import React from 'react';
 
-export default function NavBar() {
+const Pagination= (props) => {
     return (
         <div></div>
     );
 }
+
+export default Pagination;

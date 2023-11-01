@@ -1,9 +1,9 @@
 import React from 'react';
 
-function LoginPage() {
+function JoinPage(props) {
     return (
         <div></div>
     );
 }
 
-export default LoginPage;
+export default JoinPage;

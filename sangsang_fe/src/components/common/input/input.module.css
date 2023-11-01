@@ -1,0 +1,69 @@
+.input{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 40px;
+    max-height: 50px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(125, 125, 125, 0.5);
+    border-radius: 3px ;
+    padding: 10px 10px 10px 10px;
+    display: block;
+}
+
+.input[type='datetime-local'], .input[type='date'] {
+    color: var(--fc-color-text-content);
+}
+
+.input:focus{
+    outline-color: var(--fc-button-active-bg-color);
+}
+
+.input[type=radio]{
+    width: 23px;
+    height: 23px;
+}
+.input[type=radio]:checked{
+    border-radius: 30px ;
+    accent-color: var(--fc-button-active-bg-color);
+}
+
+.color{
+    width: 40px;
+    height: 40px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+
+}
+.color::-webkit-color-swatch{
+    border-radius: 40px;
+    border: 0;
+}
+
+.textarea {
+    width: 100%;
+    padding: 10px;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid rgba(125, 125, 125, 0.5);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: black;
+}
+
+.textarea:focus{
+    outline-color: var(--fc-button-active-border-color);
+}
+
+.textarea:disabled, .input:disabled{
+    border: none ;
+    background-color: var(--fc-buttom-bg-color);
+    color: black;
+    padding: 0;
+
+}
