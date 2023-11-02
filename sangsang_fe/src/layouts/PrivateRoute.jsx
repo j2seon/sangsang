@@ -1,29 +1,22 @@
 import {Navigate, Outlet} from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
 
-// const PrivateRoute = ({children}) => {
-//     const {user} = useAuth();
-//
-//
-//     if (!user.isAuthenticated) {
-//         return <Navigate to="/login" />;
-//     }
-//
-//     return children;
-// };
-
-const PrivateRoute = ({children, isAdmin}) => {
+const PrivateRoute = ({isAdmin}) => {
     const { user } = useAuth();
 
     if (!user.isAuthenticated) {
         return <Navigate to="/login" replace/>;
     }
 
-    if (user.isAuthenticated && (isAdmin && user.auth === 'ROLE_ADMIN')) {
-        console.log("sjdurldd")
-        return <Navigate to="/admin" replace/>;
+    if (user.isAuthenticated && (isAdmin && !user.auth.includes("ADMIN"))) {
+        return <Navigate to="/" />;
     }
 
-    return children;
+     //if (user.isAuthenticated && ( user.auth.includes("ADMIN"))) {
+      //   return <Navigate to="/admin" replace/>;
+     //}
+
+
+    return <Outlet/>;
 };
 export default PrivateRoute;

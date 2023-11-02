@@ -1,5 +1,7 @@
 package iium.jjs.sansang_back.member.service;
 
+import iium.jjs.sansang_back.common.FileUploadUtils;
+import iium.jjs.sansang_back.exception.FileUploadException;
 import iium.jjs.sansang_back.exception.NotFountMemberException;
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
@@ -11,10 +13,13 @@ import iium.jjs.sansang_back.member.entity.Member;
 import iium.jjs.sansang_back.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,14 +34,17 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${files.file-dir}")
+    private String FILE_DIR;
+
+    @Value("${files.file-url}")
+    private String FILES_URL;
 
     // 회원가입
     @Transactional
     public void register(JoinDto joinDto) { // 다른 타입 반환해주자
 
         log.info("joinDto {}" , joinDto);
-
-
 
         Member newMember = Member.builder()
                                     .memberId(joinDto.getMemberId())
@@ -80,6 +88,23 @@ public class MemberService {
         member.setMemberName(memberInfoDto.getMemberName());
 
         return new MemberDto(member);
+    }
+
+    // 프로필 사진 업로드
+    private void fileLoad(MultipartFile multipartFile,Member member){
+
+        log.info("[MemberService] MultipartFile= {}", multipartFile );
+
+        if(multipartFile == null) return;
+
+        try {
+            String saveFile = FileUploadUtils.saveFile(FILE_DIR, multipartFile);
+            member.setProfile(saveFile);
+
+        } catch (IOException e) {
+            FileUploadUtils.deleteFile(FILE_DIR, multipartFile.getName());
+            throw new FileUploadException("파일 저장 중 오류가 발생했습니다");
+        }
     }
 
 

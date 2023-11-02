@@ -37,6 +37,12 @@ jwt:
   secret: 1LxrVXYDdRoBBa2Wc9lfOLVUl9BXt6JEZEhkm1mLY04lbjIx4I18x4QOha7cSKrCQJCKwpavnVtfVzFPnBzJfQ==
   access-token-expired: 43200
   refresh-token-expired: 1209600
+  refreshName: sangRefresh
+
+files:
+  file-dir: classpath:/static/member/profile
+  file-url: /member/profile/**
+
 
 logging:
   level:

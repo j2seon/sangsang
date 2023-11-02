@@ -28,11 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = tokenProvider.resolveToken(request);
         log.info("=======[JwtFilter] accessToken={}==========",accessToken);
 
-        if (request.getRequestURI().equals("/auth/reissue")) {
-
-        }
-
-
         if (accessToken != null && tokenProvider.validateToken(accessToken)) {
             if (!request.getRequestURI().equals("/auth/reissue")) {
                 Authentication authentication = tokenProvider.getAuthentication(accessToken);

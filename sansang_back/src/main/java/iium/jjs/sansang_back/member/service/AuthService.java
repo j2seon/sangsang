@@ -11,11 +11,14 @@ import iium.jjs.sansang_back.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j
@@ -32,7 +35,7 @@ public class AuthService {
 
     private final RedisService redisService;
 
-    public TokenDto login(LoginDto loginDto){
+    public TokenDto login(LoginDto loginDto, HttpServletResponse response){
 
         Member member = memberRepository.findByMemberId(loginDto.getId()).orElseThrow(() -> new NotFountMemberException("해당 아이디가 존재하지 않습니다."));
 
@@ -42,12 +45,14 @@ public class AuthService {
 
         // 액세스토큰 리프레시토큰 발행
         String accessToken = tokenProvider.createAccessToken(member);
-        String refreshToken = tokenProvider.createRefreshToken();
+        String refreshToken = tokenProvider.createRefreshToken(member);
 
-        log.info("[AuthService]accessToken = {}",accessToken);
+        log.info("[AuthService]accessToken = {} refreshToken={}",accessToken,refreshToken);
 
-        // 리프레시토큰은 redis 저장
+        // 리프레시토큰 redis에 저장 / secure 쿠키로 전달
         redisService.setValues(member.getMemberId(), refreshToken);
+        ResponseCookie cookie = tokenProvider.generateRefreshTokenInCookie(refreshToken);
+        response.setHeader("Set-Cookie", cookie.toString());
 
         return TokenDto.builder()
                 .auth(member.getAuthority().toString())
@@ -63,30 +68,35 @@ public class AuthService {
         redisService.deleteValues(memberId);
     }
 
-    public TokenDto reissueToken(String memberId){
+
+    //재발급
+    public TokenDto reissueToken(Cookie cookie){
+
+        String token = cookie.getValue();
+
+        log.info("[AuthService] reissueToken token={}", token);
+        String memberId = "";
+
+        if(tokenProvider.validateToken(token)){
+             memberId= tokenProvider.getAuthentication(token).getName();
+        }
 
         String refreshToken = redisService.getValues(memberId);
         log.info("[AuthService] reissueToken refreshtoken={}", refreshToken);
-//        log.info("[AuthService] token token={}", token);
-
-        if(!tokenProvider.validateToken(refreshToken)){
-
-        }
 
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFountMemberException("해당 아이디가 존재하지 않습니다."));
 
         String newAccessToken = tokenProvider.createAccessToken(member);
-        String newRefreshToken = tokenProvider.createRefreshToken();
+        String newRefreshToken = tokenProvider.createRefreshToken(member);
 
-        redisService.setValues(memberId,newRefreshToken);
+        redisService.setValues(memberId, newRefreshToken);
+
+        log.info("[AuthService] reissueToken newRefreshToken={}", newRefreshToken);
 
         return TokenDto.builder()
                 .memberId(memberId)
                 .auth(member.getAuthority().toString())
                 .accessToken(newAccessToken)
                 .build();
-
     }
-
-
 }

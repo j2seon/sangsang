@@ -1,7 +1,6 @@
 package iium.jjs.sansang_back.jwt;
 
 import iium.jjs.sansang_back.exception.TokenException;
-import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
 import io.jsonwebtoken.*;
@@ -9,7 +8,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.Cookie.SameSite;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -17,8 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Date;
 
@@ -29,17 +30,22 @@ public class TokenProvider {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORITIES_KEY = "auth"; // 권한이름
     private static final String BEARER_TYPE = "Bearer "; // 토큰 타입
-    private static final String MEMBER_ID = "memberId"; // 토큰 타입
-    private final long accessTokenExpiredTime; // 액세스 토큰 시간
-    private final long refreshTokenExpiredTime ; // 리프레시 토큰 시간
+    private static final String MEMBER_ID = "memberId"; //
+
+    @Value("${jwt.access-token-expired}")
+    private long accessTokenExpiredTime; // 액세스 토큰 시간
+
+    @Value("${jwt.refresh-token-expired}")
+    private long refreshTokenExpiredTime; // 리프레시 토큰 시간
     private final Key key; // 키
+
+    @Value("${jwt.refreshName}")
+    private String refreshTokenName;
     private final UserDetailsService userDetailsService;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
-                         @Value("${jwt.access-token-expired}") long accessTokenExpiredTime,
-                         @Value("${jwt.refresh-token-expired}") long refreshTokenExpiredTime,
                          UserDetailsService userDetailsService
-                         ) {
+    ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpiredTime = accessTokenExpiredTime * 1000;
@@ -48,9 +54,9 @@ public class TokenProvider {
     }
 
     // 엑세스 토큰 생성
-    public String createAccessToken(Member member){
+    public String createAccessToken(Member member) {
         log.info("[TokenProvider] createAccessToken =======");
-        log.info("[TokenProvider] accessTokenExpiredTime ={}=======",accessTokenExpiredTime);
+        log.info("[TokenProvider] accessTokenExpiredTime ={}=======", accessTokenExpiredTime);
         return Jwts.builder()
                 .setExpiration(
                         new Date(System.currentTimeMillis() + accessTokenExpiredTime)
@@ -64,24 +70,24 @@ public class TokenProvider {
     }
 
     // 리프레쉬 토큰 생성
-    public String createRefreshToken(){
+    public String createRefreshToken(Member member) {
         log.info("[TokenProvider] createRefreshToken =======");
 
-        String refreshToken  = Jwts.builder()
-                                .setExpiration(
-                                    new Date(System.currentTimeMillis() + refreshTokenExpiredTime)
-                                )
-                                .setSubject("refresh-token")
-                                .setIssuedAt(new Date())
-                                .signWith(key, SignatureAlgorithm.HS512)
-                                .compact();
         //redis에 저장하는 로직
-        
-        return refreshToken;
+
+        return Jwts.builder()
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + refreshTokenExpiredTime)
+                )
+                .setSubject("refresh-token")
+                .setIssuedAt(new Date())
+                .claim(MEMBER_ID, member.getMemberId())
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     // 인증 객체
-    public Authentication getAuthentication(String token){
+    public Authentication getAuthentication(String token) {
 
         Claims claims = parseClaims(token);
         String memberId = claims.get(MEMBER_ID).toString();
@@ -114,8 +120,19 @@ public class TokenProvider {
         return null;
     }
 
+    // http secure 쿠키 생성
+    public ResponseCookie generateRefreshTokenInCookie(String token) {
 
-        // 토큰 유효성 검사
+        return ResponseCookie.from(refreshTokenName, token)
+                .maxAge(refreshTokenExpiredTime / 1000)
+                .path("/")
+                .secure(true)
+                .sameSite(SameSite.NONE.name())
+                .httpOnly(true)
+                .build();
+    }
+
+    // 토큰 유효성 검사
     public boolean validateToken(String token) {
 
         try {
@@ -135,7 +152,6 @@ public class TokenProvider {
             throw new TokenException("JWT 토큰이 잘못되었습니다.");
         }
     }
-
 
 
 }

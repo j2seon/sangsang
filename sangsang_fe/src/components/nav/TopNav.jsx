@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Nav.module.css';
+import styles from './Header.module.css';
 import Logo from "../common/other/Logo";
 import Avatar from "../common/other/Avatar";
 import {useAuth} from "../../context/AuthContext";
@@ -15,7 +15,7 @@ export default function TopNav() {
             />
             <div className={styles.profile}>
                 <p className={styles.profile_name}>{user.memberId}</p>
-                <Avatar />
+                <Avatar isLink={user.isAuthenticated}/>
             </div>
         </div>
     );

@@ -6,20 +6,24 @@ import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
 import iium.jjs.sansang_back.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -30,9 +34,9 @@ public class AuthController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto> login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity<ResponseDto> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response){
 
-        TokenDto tokenDto = authService.login(loginDto);
+        TokenDto tokenDto = authService.login(loginDto, response);
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()
@@ -58,8 +62,10 @@ public class AuthController {
 
     //토큰 재발행
     @PostMapping("/reissue")
-    public ResponseEntity<ResponseDto> reissue(@AuthenticationPrincipal MemberDetailImpl memberDetail) {
-        TokenDto tokenDto = authService.reissueToken(memberDetail.getUsername());
+    public ResponseEntity<ResponseDto> reissue(@CookieValue(value = "sangRefresh", required = false) Cookie cookie, @RequestHeader MultiValueMap<String, String> headerMap) {
+        log.info("[header]={}", headerMap);
+
+        TokenDto tokenDto = authService.reissueToken(cookie);
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()

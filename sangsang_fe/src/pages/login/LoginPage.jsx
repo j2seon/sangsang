@@ -3,24 +3,47 @@ import InputEle from "../../components/common/input/Input";
 import Logo from "../../components/common/other/Logo";
 import styles from './LoginPage.module.css';
 import ButtonInline from "../../components/common/button/ButtomInline";
+import {useAuth} from "../../context/AuthContext";
+import {Navigate, useNavigate} from "react-router-dom";
 
 function LoginPage() {
-    const [user , setUser] = useState({
+    const navigate = useNavigate();
+    const {user, login, setUser} = useAuth();
+
+    const [form , setForm] = useState({
         id:'',
         pwd:'',
     });
 
     const handleChange = (e) => {
         const { value, name } = e.target;
-        setUser({
-            ...user,
+        setForm({
+            ...form,
             [name]: value
         });
         console.log(user)
     }
 
     const handleSubmit = () => {
-        //로그인 api
+        login(form)
+            .then(res => {
+                console.log(res);
+                const {accessToken, auth, memberId} = res.data;
+                setUser({auth, memberId, isAuthenticated: true});
+                localStorage.setItem("accessToken", accessToken);
+                navigate('/');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    if(user.isAuthenticated && user.auth.includes("ADMIN")){
+        return <Navigate to="/admin" replace/>;
+    }
+
+    if(user.isAuthenticated && !user.auth.includes("ADMIN")){
+        return <Navigate to="/" replace/>;
     }
 
     return (
