@@ -60,10 +60,47 @@
     outline-color: var(--fc-button-active-border-color);
 }
 
-.textarea:disabled, .input:disabled{
+.textarea:disabled{
     border: none ;
     background-color: var(--fc-buttom-bg-color);
     color: black;
-    padding: 0;
+}
 
+.input:disabled{
+    background-color: var(--fc-buttom-bg-color);
+    color: black;
+}
+
+.input_wrap{
+    padding: 20px;
+}
+
+.img_label {
+    object-fit: cover;
+    object-position: center center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img_wrap{
+    position: relative;
+    cursor: pointer;
+}
+
+.img_label img {
+    border-radius: 100%;
+    width: 150px;
+    height: 150px;
+}
+
+.icon{
+    position: absolute;
+    border-radius: 100%;
+    border: 2px solid var(--fc-button-border-color);
+    bottom : 0;
+    right: 15px;
+    padding: 3px;
+    background-color: var(--fc-buttom-bg-color);
 }

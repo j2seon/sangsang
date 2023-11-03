@@ -26,7 +26,11 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = tokenProvider.resolveToken(request);
-        log.info("=======[JwtFilter] accessToken={}==========",accessToken);
+
+        if(request.getRequestURI().equals("/auth/reissue")){
+            //tokenProvider.get
+        }
+
 
         if (accessToken != null && tokenProvider.validateToken(accessToken)) {
             if (!request.getRequestURI().equals("/auth/reissue")) {

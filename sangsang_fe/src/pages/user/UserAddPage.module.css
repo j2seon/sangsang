@@ -1,0 +1,21 @@
+.container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex{
+    display: flex;
+}
+
+.input_wrap{
+    width: 30%;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+.space{
+    margin-bottom: 10px;
+}

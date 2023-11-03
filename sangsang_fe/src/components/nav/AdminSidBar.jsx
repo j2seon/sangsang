@@ -3,8 +3,6 @@ import SideBarItem from "./SideBarItem";
 import {PersonOutline} from "@mui/icons-material";
 import ButtonInline from "../common/button/ButtomInline";
 import styles from "./Sidebar.module.css";
-import ButtonOutline from "../common/button/ButtonOutline";
-import {hover} from "@testing-library/user-event/dist/hover";
 function AdminSidBar() {
 
     const buttonStyle = {

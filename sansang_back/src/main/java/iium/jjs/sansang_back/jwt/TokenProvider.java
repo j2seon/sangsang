@@ -32,11 +32,9 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "Bearer "; // 토큰 타입
     private static final String MEMBER_ID = "memberId"; //
 
-    @Value("${jwt.access-token-expired}")
-    private long accessTokenExpiredTime; // 액세스 토큰 시간
+    private final long accessTokenExpiredTime; // 액세스 토큰 시간
 
-    @Value("${jwt.refresh-token-expired}")
-    private long refreshTokenExpiredTime; // 리프레시 토큰 시간
+    private final long refreshTokenExpiredTime; // 리프레시 토큰 시간
     private final Key key; // 키
 
     @Value("${jwt.refreshName}")
@@ -44,6 +42,8 @@ public class TokenProvider {
     private final UserDetailsService userDetailsService;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
+                         @Value("${jwt.refresh-token-expired}") long refreshTokenExpiredTime,
+                         @Value("${jwt.access-token-expired}") long accessTokenExpiredTime,
                          UserDetailsService userDetailsService
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -120,6 +120,10 @@ public class TokenProvider {
         return null;
     }
 
+    public Date getExpiredDate(String token){
+        return parseClaims(token).getExpiration();
+    }
+
     // http secure 쿠키 생성
     public ResponseCookie generateRefreshTokenInCookie(String token) {
 
@@ -131,6 +135,11 @@ public class TokenProvider {
                 .httpOnly(true)
                 .build();
     }
+
+   // public boolean cookieChecked(){
+
+   // }
+
 
     // 토큰 유효성 검사
     public boolean validateToken(String token) {

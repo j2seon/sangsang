@@ -2,9 +2,8 @@ package iium.jjs.sansang_back.member.service;
 
 import iium.jjs.sansang_back.common.FileUploadUtils;
 import iium.jjs.sansang_back.exception.FileUploadException;
-import iium.jjs.sansang_back.exception.NotFountMemberException;
+import iium.jjs.sansang_back.exception.NotFoundMemberException;
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
-import iium.jjs.sansang_back.member.dto.request.LoginDto;
 import iium.jjs.sansang_back.member.dto.request.MemberInfoDto;
 import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import iium.jjs.sansang_back.member.entity.Address;
@@ -71,7 +70,7 @@ public class MemberService {
 
     // 한명 조회
     public MemberDto findById(String memberId){
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFountMemberException("해당 회원이 존재하지 않습니다"));
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("해당 회원이 존재하지 않습니다"));
 
         return new MemberDto(member);
     }
@@ -79,7 +78,7 @@ public class MemberService {
     // 회원정보수정
     @Transactional
     public MemberDto updateMemberInfo(String memberId, MemberInfoDto memberInfoDto){
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFountMemberException("해당 회원이 존재하지 않습니다"));
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("해당 회원이 존재하지 않습니다"));
 
         // 이거만 따로 정리하기
         member.setMemberPwd(passwordEncoder.encode(memberInfoDto.getMemberPwd()));
@@ -91,7 +90,7 @@ public class MemberService {
     }
 
     // 프로필 사진 업로드
-    private void fileLoad(MultipartFile multipartFile,Member member){
+    private void fileLoad(MultipartFile multipartFile, Member member){
 
         log.info("[MemberService] MultipartFile= {}", multipartFile );
 

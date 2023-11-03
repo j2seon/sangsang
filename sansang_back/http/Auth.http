@@ -15,7 +15,7 @@ POST http://localhost:8081/auth/logout
 Content-Type: application/json
 Accept: */*
 Access-Control-Allow-Origin: *
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5MDI2OTUsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODkwMjY1MiwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.WSB2J2jm9hDsJuH-41m2kdQQspGkNkldGkd1S5vgUZdhLr4kYA8LB1tL0ZMpjS_NgfyuwN-kVmbNj3vYCoGh5A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5NzgxNDksInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODk3ODEwNiwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.HV1DhbmzRxt234cyP6qMwY5yyFY6dhbpyjsn3A6OVoreZv1G8zUo97LFit-f03rof8mp3GoKE2idUFlzLKtlJw
 
 
 ### 토큰 재발급

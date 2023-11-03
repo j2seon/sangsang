@@ -1,6 +1,6 @@
 package iium.jjs.sansang_back.jwt.service;
 
-import iium.jjs.sansang_back.exception.NotFountMemberException;
+import iium.jjs.sansang_back.exception.NotFoundMemberException;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
 import iium.jjs.sansang_back.member.repository.MemberRepository;
@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Component
@@ -21,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFountMemberException("등록된 아이디가 없습니다."));
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("등록된 아이디가 없습니다."));
 
         MemberDetailImpl memberDetails = new MemberDetailImpl(member);
 

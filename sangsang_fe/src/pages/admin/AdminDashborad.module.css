@@ -4,7 +4,7 @@
 }
 
 .side_wrap{
-    flex:1;
+    flex-basis: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -13,5 +13,5 @@
 }
 
 .main{
-    flex:5;
+    flex:1
 }
