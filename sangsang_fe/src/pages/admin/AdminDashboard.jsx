@@ -5,14 +5,7 @@ import {Outlet} from "react-router-dom";
 function AdminDashboard() {
   return (
       <main>
-        <div className={styles.container}>
-            <div className={styles.side_wrap}>
-                <SideBar/>
-            </div>
-            <div className={styles.main}>
-                <Outlet/>
-            </div>
-        </div>
+        어드민 메인
       </main>
   );
 }

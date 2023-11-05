@@ -3,19 +3,15 @@ import {useAuth} from "../context/AuthContext";
 
 const PrivateRoute = ({isAdmin}) => {
     const { user } = useAuth();
+    const isUserAdmin = user.isAuthenticated && user.auth.includes("ADMIN");
 
     if (!user.isAuthenticated) {
         return <Navigate to="/login" replace/>;
     }
 
-    if (user.isAuthenticated && (isAdmin && !user.auth.includes("ADMIN"))) {
-        return <Navigate to="/" />;
+    if (user.isAuthenticated && !isUserAdmin) {
+        return <Navigate to="/" replace/>;
     }
-
-     //if (user.isAuthenticated && ( user.auth.includes("ADMIN"))) {
-      //   return <Navigate to="/admin" replace/>;
-     //}
-
 
     return <Outlet/>;
 };

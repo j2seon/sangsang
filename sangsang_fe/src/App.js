@@ -14,29 +14,29 @@ import UserInfo from "./pages/user/UserInfo";
 import UserAddPage from "./pages/user/UserAddPage";
 import UpdateUserInfo from "./pages/user/UpdateUserInfo";
 import AdminLayout from "./layouts/AdminLayout";
+import ProtectedRoute from "./layouts/ProtectedRoute";
 
 
 function App() {
   return (
       <AuthContextProvider>
-        <Routes >
+        <Routes>
           <Route element={<Layouts/>}>
-            <Route path="/" element={<PrivateRoute/>}>
-                <Route index element={<Main/>}/>
-                <Route path="/dashboard" element={<Main/>}/>
+            <Route path="/" element={<ProtectedRoute><Main/></ProtectedRoute>}>
+              {/*<Route index element={<Main/>}/>*/}
             </Route>
-            <Route path="/admin" element={<AdminLayout/>}>
-                <Route index element={<PrivateRoute isAdmin={true}/>} />
-                <Route path="users">
-                    <Route index element={<UserListPage/>}/>
-                    <Route path="add" element={<UserAddPage/>} />
-                    <Route path=":userId" element={<UserInfo/>}/>
-                    <Route path=":userId/edit" element={<UpdateUserInfo/>}/>
-                </Route>
+            <Route path="/admin" element={<ProtectedRoute isAdmin={true}><AdminLayout/></ProtectedRoute>}>
+              <Route index element={<AdminDashboard/>}/>
+              <Route path="users">
+                <Route index element={<UserListPage/>}/>
+                <Route path="add" element={<UserAddPage/>}/>
+                <Route path=":userId" element={<UserInfo/>}/>
+                <Route path=":userId/edit" element={<UpdateUserInfo/>}/>
+              </Route>
             </Route>
           </Route>
           <Route path="/login" element={<LoginPage/>}/>
-          <Route path="*" element={<NotFound/>} />
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
       </AuthContextProvider>
   );
