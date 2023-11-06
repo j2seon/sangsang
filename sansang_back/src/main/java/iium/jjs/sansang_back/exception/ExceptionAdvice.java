@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.exception;
 
 import iium.jjs.sansang_back.exception.dto.ApiExceptionDTO;
+import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,13 @@ public class ExceptionAdvice {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
       .body(new ApiExceptionDTO(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
   }
+
+  @ExceptionHandler(RefreshTokenException.class)
+  public ResponseEntity<ApiExceptionDTO> exceptionHandler(RefreshTokenException e) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+      .body(new ApiExceptionDTO(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+  }
+
   @ExceptionHandler(LoginFailException.class)
   public ResponseEntity<ApiExceptionDTO> exceptionHandler(LoginFailException e){
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)

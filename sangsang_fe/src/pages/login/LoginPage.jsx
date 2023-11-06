@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import InputEle from "../../components/common/input/Input";
 import Logo from "../../components/common/other/Logo";
 import styles from './LoginPage.module.css';
@@ -14,6 +14,14 @@ function LoginPage() {
         id:'',
         pwd:'',
     });
+
+    // useEffect(() => {
+    //     if(user.auth.includes("ADMIN")){
+    //         navigate("/admin");
+    //     }else{
+    //         navigate("/");
+    //     }
+    // }, []);
 
     const handleChange = (e) => {
         const { value, name } = e.target;
@@ -31,16 +39,20 @@ function LoginPage() {
                 const {accessToken, auth, memberId} = res.data;
                 setUser({auth, memberId, isAuthenticated: true});
                 localStorage.setItem("accessToken", accessToken);
-                navigate('/');
+                if(auth.includes("ADMIN")){
+                    navigate("/admin");
+                }else{
+                    navigate("/");
+                }
             })
             .catch(err => {
                 console.log(err);
             })
     }
 
-    if(user.isAuthenticated && user.auth.includes("ADMIN")){
-        return <Navigate to="/admin" replace/>;
-    }
+    // if(user.isAuthenticated && user.auth.includes("ADMIN")){
+    //     return <Navigate to="/admin" replace/>;
+    // }
 
     if(user.isAuthenticated && !user.auth.includes("ADMIN")){
         return <Navigate to="/" replace/>;

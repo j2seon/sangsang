@@ -33,6 +33,8 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final FileUploadUtils fileUploadUtils;
+
     @Value("${files.file-dir}")
     private String FILE_DIR;
 
@@ -46,15 +48,15 @@ public class MemberService {
         log.info("joinDto {}" , joinDto);
 
         Member newMember = Member.builder()
-                                    .memberId(joinDto.getMemberId())
-                                    .memberName(joinDto.getMemberName())
-                                    .memberPwd(passwordEncoder.encode(joinDto.getMemberPwd()))
-                                    .profile(joinDto.getProfile())
+                                    .memberId(joinDto.getId())
+                                    .memberName(joinDto.getName())
+                                    .memberPwd(passwordEncoder.encode(joinDto.getPwd()))
                                     .address(new Address(joinDto.getZipCode(), joinDto.getAddress(), joinDto.getAddressDetail()))
-                                    .profile(joinDto.getProfile())
                                     .createdAt(LocalDateTime.now())
                                     .authority(Authority.ROLE_USER)
                                     .build();
+
+        fileLoad(joinDto.getProfile(), newMember);
 
         memberRepository.save(newMember);
         

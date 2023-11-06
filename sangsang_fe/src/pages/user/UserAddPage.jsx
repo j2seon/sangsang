@@ -5,6 +5,7 @@ import Modal from "../../components/common/modal/Modal";
 import ButtonInline from "../../components/common/button/ButtomInline";
 import ImageInput from "../../components/common/input/ImageInput";
 import styles from "./UserAddPage.module.css";
+import {memberAdd} from "../../api/admin/adminApi";
 
 function UserAddPage() {
   const [open, setOpen] = useState(false);
@@ -28,6 +29,13 @@ function UserAddPage() {
     console.log(form)
   }
 
+  const handleFile = (file) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      'profile': file
+    }));
+    console.log(form);
+  }
 
   const style ={
     maxWidth: '150px'
@@ -39,6 +47,24 @@ function UserAddPage() {
 
   const handleCloseModal = () => {
     setOpen(false);
+  }
+
+  const createFormData = ()=>{
+    const formData = new FormData();
+    formData.append('id', form.id);
+    formData.append('pwd', form.pwd);
+    formData.append('name', form.name);
+    formData.append('profile', form.profile);
+    formData.append('zipCode', form.zipCode);
+    formData.append('address', form.address);
+    formData.append('addressDetail', form.addressDetail);
+    return formData;
+  }
+
+  const handleRequest = () => {
+    const formData = createFormData();
+    console.log(formData)
+    return memberAdd(formData);
   }
 
   const handelAddress = (address) => {
@@ -74,6 +100,7 @@ function UserAddPage() {
     <div className={styles.container}>
       <ImageInput
         style={style}
+        onImageChange={handleFile}
       />
       <div className={styles.input_wrap}>
         <div className={styles.space}>
@@ -140,8 +167,7 @@ function UserAddPage() {
       </div>
       <div>
         <ButtonInline
-          onClick={()=>{
-            console.log(form)}}
+          onClick={handleRequest}
           value='등록'
         />
       </div>

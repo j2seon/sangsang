@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.member.dto.request;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -12,15 +13,14 @@ import java.time.LocalDateTime;
 @ToString
 public class JoinDto {
 
+    @NotBlank
+    private String id;
 
     @NotBlank
-    private String memberId;
+    private String pwd;
 
     @NotBlank
-    private String memberPwd;
-
-    @NotBlank
-    private String memberName;
+    private String name;
 
     private String zipCode;
 
@@ -28,13 +28,13 @@ public class JoinDto {
 
     private String addressDetail;
 
-    private String profile;
+    private MultipartFile profile;
 
     @Builder
-    public JoinDto(String memberId, String memberPwd, String memberName, String zipCode, String address, String addressDetail, String profile) {
-        this.memberId = memberId;
-        this.memberPwd = memberPwd;
-        this.memberName = memberName;
+    public JoinDto(String id, String pwd, String name, String zipCode, String address, String addressDetail, MultipartFile profile) {
+        this.id = id;
+        this.pwd = pwd;
+        this.name = name;
         this.zipCode = zipCode;
         this.address = address;
         this.addressDetail = addressDetail;

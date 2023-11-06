@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.jwt;
 
 import iium.jjs.sansang_back.exception.TokenException;
+import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
 import io.jsonwebtoken.*;
@@ -20,8 +21,11 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 
 @Slf4j
@@ -136,30 +140,69 @@ public class TokenProvider {
                 .build();
     }
 
-   // public boolean cookieChecked(){
+    // 토큰의 등록된 해당 회원의 아이디 추출
+    public String getEmpNo(String token) {
+        return Jwts.parserBuilder()
+          .setSigningKey(key).build()
+          .parseClaimsJws(token)
+          .getBody()
+          .get(MEMBER_ID).toString();
+    }
 
-   // }
+    public void deleteCookie(Cookie[] cookies, HttpServletResponse response) {
+        Optional<Cookie> sangRefreshCookie = Arrays.stream(cookies)
+          .filter(cookie -> "sangRefresh".equals(cookie.getName()))
+          .findAny();
+
+        if (sangRefreshCookie.isPresent()) {
+            Cookie cookieToRemove = sangRefreshCookie.get();
+            cookieToRemove.setMaxAge(0);
+            cookieToRemove.setPath("/");
+            response.addCookie(cookieToRemove);
+        }
+    }
+
+    public void deleteCookie(Cookie cookies, HttpServletResponse response) {
+            cookies.setMaxAge(0);
+            cookies.setPath("/");
+            response.addCookie(cookies);
+    }
+
 
 
     // 토큰 유효성 검사
-    public boolean validateToken(String token) {
+    public boolean accessValidateToken(String token) {
 
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             log.info("[TokenProvider] 만료된 JWT 토큰입니다.");
-            throw new TokenException("만료된 JWT 토큰입니다.");
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("[TokenProvider] 잘못된 JWT 서명입니다.");
-            throw new TokenException("잘못된 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
             log.info("[TokenProvider] 지원되지 않는 JWT 토큰입니다.");
-            throw new TokenException("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("[TokenProvider] JWT 토큰이 잘못되었습니다.");
-            throw new TokenException("JWT 토큰이 잘못되었습니다.");
         }
+        return false;
+    }
+
+    public boolean refreshValidateToken(String token) {
+
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.info("[TokenProvider] 만료된 JWT 토큰입니다.");
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("[TokenProvider] 잘못된 JWT 서명입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("[TokenProvider] 지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("[TokenProvider] JWT 토큰이 잘못되었습니다.");
+        }
+        return false;
     }
 
 

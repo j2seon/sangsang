@@ -3,6 +3,7 @@ package iium.jjs.sansang_back.member.service;
 import iium.jjs.sansang_back.common.service.RedisService;
 import iium.jjs.sansang_back.exception.LoginFailException;
 import iium.jjs.sansang_back.exception.NotFoundMemberException;
+import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
 import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.jwt.TokenProvider;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
@@ -35,7 +36,6 @@ public class AuthService {
     public TokenDto login(LoginDto loginDto, HttpServletResponse response){
 
         Member member = memberRepository.findByMemberId(loginDto.getId()).orElseThrow(() -> new NotFoundMemberException("해당 아이디가 존재하지 않습니다."));
-
        if(!passwordEncoder.matches(loginDto.getPwd(), member.getMemberPwd())){
            throw new LoginFailException("잘못된 비밀번호 입니다.");
         }
@@ -67,29 +67,37 @@ public class AuthService {
 
 
     //재발급
-    public TokenDto reissueToken(Cookie cookie){
+    public TokenDto reissueToken(Cookie cookie, HttpServletResponse response){
 
-        String token = cookie.getValue();
+        String cookieValue = cookie.getValue();
 
-        log.info("[AuthService] reissueToken token={}", token);
-        String memberId = "";
+        log.info("[AuthService] cookieValue token={}", cookieValue);
+        String memberId = tokenProvider.getAuthentication(cookieValue).getName();
 
-        if(tokenProvider.validateToken(token)){
-             memberId= tokenProvider.getAuthentication(token).getName();
+        //1. redis에서 아이디로 refreshToken가져오고
+        String refreshToken = redisService.getValues(memberId);
+        log.info("[AuthService] refreshToken token={}", refreshToken);
+
+        //2. 만약 cookie에 담긴 값과 redis에 담긴 값이 같지 않으면 에러 및 refresh 쿠키 삭제 -> 앞단에서 처리하도록 수정해도되겠다
+        if(!refreshToken.equals(cookieValue)) {
+          tokenProvider.deleteCookie(cookie, response);
+          throw new RefreshTokenException("일치하지 않는 토큰입니다");
         }
 
-        String refreshToken = redisService.getValues(memberId);
-        log.info("[AuthService] reissueToken refreshtoken={}", refreshToken);
-
+        //3. 같다면 member엔티티를 가져와서 
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("해당 아이디가 존재하지 않습니다."));
 
+        //4. 새로 access, refresh를 만들고
         String newAccessToken = tokenProvider.createAccessToken(member);
         String newRefreshToken = tokenProvider.createRefreshToken(member);
 
+        //5. 바뀐 refresh 도 저장시켜주고 다시쿠키저장
         redisService.setValues(memberId, newRefreshToken);
-
+        ResponseCookie newCookie = tokenProvider.generateRefreshTokenInCookie(refreshToken);
+        response.setHeader("Set-Cookie", cookie.toString());
         log.info("[AuthService] reissueToken newRefreshToken={}", newRefreshToken);
 
+        //6. access를 클라이언트에게 반환
         return TokenDto.builder()
                 .memberId(memberId)
                 .auth(member.getAuthority().toString())

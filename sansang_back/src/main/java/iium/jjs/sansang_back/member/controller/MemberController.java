@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -27,9 +30,10 @@ public class MemberController {
 
     // 가입
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto> register(@Valid @RequestBody JoinDto joinDto){
-
+    public ResponseEntity<ResponseDto> register(@Valid @ModelAttribute JoinDto joinDto){
+    log.info("joindto={}",joinDto);
         memberService.register(joinDto);
+        log.info("joinDTO={}",joinDto);
 
         return ResponseEntity.ok()
                     .body(ResponseDto.builder()
@@ -40,7 +44,12 @@ public class MemberController {
 
     // 전체 조회
     @GetMapping("/members")
-    public ResponseEntity<ResponseDto> memberAllList(){
+    public ResponseEntity<ResponseDto> memberAllList(HttpServletRequest request){
+
+        for (Cookie cok : request.getCookies()) {
+            System.out.println("쿠키 이름: " + cok.getName());
+            System.out.println("쿠키 값: " + cok.getValue());
+        }
 
         List<MemberDto> allMember = memberService.getAllMember();
 

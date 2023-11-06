@@ -48,9 +48,14 @@ public class AuthController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<ResponseDto> logout(@AuthenticationPrincipal MemberDetailImpl memberDetail){
+    public ResponseEntity<ResponseDto> logout(@AuthenticationPrincipal MemberDetailImpl memberDetail, @CookieValue(value = "sangRefresh", required = false) Cookie cookie){
 
         authService.logout(memberDetail.getUsername());
+
+
+        log.info("Cookie={}", cookie.getValue());
+        log.info("Cookie={}", cookie.getMaxAge());
+        log.info("Cookie={}", cookie.getName());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()
@@ -62,10 +67,9 @@ public class AuthController {
 
     //토큰 재발행
     @PostMapping("/reissue")
-    public ResponseEntity<ResponseDto> reissue(@CookieValue(value = "sangRefresh", required = false) Cookie cookie, @RequestHeader MultiValueMap<String, String> headerMap) {
-        log.info("[header]={}", headerMap);
+    public ResponseEntity<ResponseDto> reissue(@CookieValue(value = "sangRefresh", required = false) Cookie cookie, HttpServletResponse response) {
 
-        TokenDto tokenDto = authService.reissueToken(cookie);
+        TokenDto tokenDto = authService.reissueToken(cookie, response);
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()

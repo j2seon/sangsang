@@ -18,7 +18,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5NzgyNzQsInN1YiI6ImFjY
 ### 전체직원조회
 GET http://localhost:8081/api/v1/member/members
 Accept: */*
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5OTM5MjMsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODk5Mzg4MCwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.TrJgBzSSG2nKGQbkFzvjv5I1z8oRBMfHImv7IPj6BeN9lRhwav2HR2QWrVHgwW8uDmO5YBsIuX6LrJjLtfUV0g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTkyODQ2NjksInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5OTI0MTQ2OSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.-9JxtoYZNE9d55Qif0tD57SLs-8v54j2NNJSn4lHrK8qTcB6dp9yKNT44FxzYKnm8JOkd-cVA2upx6jqkWXbwQ
 
 ### 한명조회
 GET http://localhost:8081/api/v1/member/admin

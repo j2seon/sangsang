@@ -11,7 +11,7 @@ function ImageInput({onImageChange, style}) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setImage(event.target.result);
-        onImageChange(event.target.result);
+        onImageChange(file);
       };
       reader.readAsDataURL(file);
     }

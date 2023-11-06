@@ -22,18 +22,20 @@ function App() {
       <AuthContextProvider>
         <Routes>
           <Route element={<Layouts/>}>
-            <Route path="/" element={<ProtectedRoute><Main/></ProtectedRoute>}>
-              {/*<Route index element={<Main/>}/>*/}
+            <Route path="/" element={<PrivateRoute/>}>
+              <Route index element={<Main/>}/>
             </Route>
-            <Route path="/admin" element={<ProtectedRoute isAdmin={true}><AdminLayout/></ProtectedRoute>}>
-              <Route index element={<AdminDashboard/>}/>
-              <Route path="users">
+
+            <Route path="/admin" element={<AdminLayout/>}>
+              <Route index element={<ProtectedRoute isAdmin={true} ><AdminDashboard/></ProtectedRoute>} />
+              <Route path="users" element={<ProtectedRoute isAdmin={true}/>}>
                 <Route index element={<UserListPage/>}/>
                 <Route path="add" element={<UserAddPage/>}/>
                 <Route path=":userId" element={<UserInfo/>}/>
                 <Route path=":userId/edit" element={<UpdateUserInfo/>}/>
               </Route>
             </Route>
+
           </Route>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="*" element={<NotFound/>}/>

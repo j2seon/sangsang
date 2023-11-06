@@ -1,14 +1,17 @@
 import axios from "axios";
+import {api} from "../customAxios";
 
 export const memberAdd = async (user)  => {
-  const requestUrl = 'http://localhost:8081/auth/login';
-  const header = {'Content-Type': 'application/json',}
+  const requestUrl = '/api/v1/member/join';
 
-  return await axios.post(requestUrl, user, {headers: header})
+  console.log(user)
+  return await api.post(requestUrl, user )
     .then(res => {
+      console.log(res)
       return res.data;
     })
     .catch(err => {
-      return err.response.data;
+      console.log(err)
+      return err.response;
     });
 };

@@ -29,6 +29,7 @@ spring:
   redis:
     port: 6379
     host: localhost
+#    password: jjs
 
   profiles:
     active: local
@@ -40,8 +41,11 @@ jwt:
   refreshName: sangRefresh
 
 files:
-  file-dir: classpath:/static/member/profile
-  file-url: /member/profile/**
+  add-resource-locations: classpath:/static/member/profile/
+  add-resource-handler: /member/profile
+
+  file-dir: src/main/resources/static/member/profile
+  file-url: http://localhost:8080/member/profile/
 
 
 logging:

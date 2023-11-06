@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.config;
 
 
+import iium.jjs.sansang_back.common.service.RedisService;
 import iium.jjs.sansang_back.jwt.JwtAccessDeniedHandler;
 import iium.jjs.sansang_back.jwt.JwtAuthenticationEntryPoint;
 import iium.jjs.sansang_back.jwt.JwtFilter;
@@ -39,7 +40,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return (web) -> web.ignoring()
-                .antMatchers("/css/**", "/js/**","/images","/lib/**","/profile/**");
+                .antMatchers("/css/**", "/js/**","/images","/lib/**","/member/profile/**");
     }
 
     @Bean

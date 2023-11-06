@@ -3,6 +3,7 @@ package iium.jjs.sansang_back.common;
 import iium.jjs.sansang_back.exception.FileUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class FileUploadUtils {
 
     public static String saveFile(String uploadDir, MultipartFile multipartFile) throws IOException {
