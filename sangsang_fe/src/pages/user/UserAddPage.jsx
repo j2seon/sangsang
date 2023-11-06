@@ -97,81 +97,86 @@ function UserAddPage() {
   }
 
   return (
-    <div className={styles.container}>
-      <ImageInput
-        style={style}
-        onImageChange={handleFile}
-      />
-      <div className={styles.input_wrap}>
-        <div className={styles.space}>
-          <label htmlFor="id">아이디</label>
-          <InputEle
-            id="id"
-            name='id'
-            placeholder="아이디"
-            onChange={handleChange}
+      <div className={styles.wrap}>
+        <div className={styles.title}>회원 등록</div>
+        <div className={styles.container}>
+          <ImageInput
+              style={style}
+              onImageChange={handleFile}
           />
-        </div>
-        <div className={styles.space}>
-          <label htmlFor="pwd">비밀번호</label>
-          <InputEle
-            id="pwd"
-            name='pwd'
-            type="password"
-            placeholder="비밀번호"
-            onChange={handleChange}
-          />
-        </div>
-        <div className={styles.space}>
-          <label htmlFor="name">이름</label>
-          <InputEle
-            id="name"
-            name='name'
-            placeholder="이름"
-            onChange={handleChange}
-          />
-        </div>
-        <div className={styles.space}>
-          <label htmlFor="address">주소</label>
-          <div className={styles.flex}>
-            <InputEle
-              id="address"
-              name='address'
-              placeholder="주소"
-              value={form.address}
-              disabled={true}
-              onChange={handleChange}
-              style={{marginRight:'5px'}}
-            />
-            <ButtonInline onClick={handleOpenModal} value="검색" style={{width: '100px'}}/>
-            {open && (
-              <Modal
-                title="주소검색"
-                // onConfirm={}
-                onCancel={handleCloseModal}
-              >
-                <DaumPostcode
-                  onComplete={handleComplete}
+          <div className={styles.input_wrap}>
+            <div className={styles.space}>
+              <label htmlFor="id">아이디</label>
+              <InputEle
+                  id="id"
+                  name='id'
+                  placeholder="아이디"
+                  onChange={handleChange}
+              />
+            </div>
+            <div className={styles.space}>
+              <label htmlFor="pwd">비밀번호</label>
+              <InputEle
+                  id="pwd"
+                  name='pwd'
+                  type="password"
+                  placeholder="비밀번호"
+                  onChange={handleChange}
+              />
+            </div>
+            <div className={styles.space}>
+              <label htmlFor="name">이름</label>
+              <InputEle
+                  id="name"
+                  name='name'
+                  placeholder="이름"
+                  onChange={handleChange}
+              />
+            </div>
+            <div className={styles.space}>
+              <label htmlFor="address">주소</label>
+              <div className={styles.flex}>
+                <InputEle
+                    id="address"
+                    name='address'
+                    placeholder="주소"
+                    value={form.address}
+                    disabled={true}
+                    onChange={handleChange}
+                    style={{marginRight:'5px'}}
                 />
-              </Modal>
-            )}
-          </div>
-          <InputEle
-            id="addressDetail"
-            name='addressDetail'
-            placeholder="상세주소"
-            onChange={handleChange}
-          />
-        </div>
+                <ButtonInline onClick={handleOpenModal} value="검색" style={{width: '100px'}}/>
+                {open && (
+                    <Modal
+                        title="주소검색"
+                        // onConfirm={}
+                        onCancel={handleCloseModal}
+                    >
+                      <DaumPostcode
+                          onComplete={handleComplete}
+                      />
+                    </Modal>
+                )}
+              </div>
+              <InputEle
+                  id="addressDetail"
+                  name='addressDetail'
+                  placeholder="상세주소"
+                  onChange={handleChange}
+              />
+            </div>
 
+          </div>
+          <div>
+            <ButtonInline
+                style={{padding:'10px 15px'}}
+                onClick={handleRequest}
+                value='등록'
+            />
+          </div>
+        </div>
       </div>
-      <div>
-        <ButtonInline
-          onClick={handleRequest}
-          value='등록'
-        />
-      </div>
-    </div>
+
   );
 }
 

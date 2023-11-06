@@ -13,6 +13,8 @@ import iium.jjs.sansang_back.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,9 +65,9 @@ public class MemberService {
     }
 
     // 전체 조회 -> 페이징 처리하기
-    public List<MemberDto> getAllMember() {
+    public Page<MemberDto> getAllMember(String keyword, Pageable pageable) {
 
-        List<Member> findAllMember = memberRepository.findAll();
+//        List<Member> findAllMember = memberRepository
 
         return findAllMember.stream().map(MemberDto::new).collect(Collectors.toList());
     }

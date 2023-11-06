@@ -8,6 +8,8 @@ import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import iium.jjs.sansang_back.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +46,10 @@ public class MemberController {
 
     // 전체 조회
     @GetMapping("/members")
-    public ResponseEntity<ResponseDto> memberAllList(HttpServletRequest request){
+    public ResponseEntity<ResponseDto> memberAllList(
+            HttpServletRequest request,
+            @PageableDefault(size = 10) Pageable pageable){
 
-        for (Cookie cok : request.getCookies()) {
-            System.out.println("쿠키 이름: " + cok.getName());
-            System.out.println("쿠키 값: " + cok.getValue());
-        }
 
         List<MemberDto> allMember = memberService.getAllMember();
 
