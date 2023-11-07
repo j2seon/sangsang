@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "../pages/admin/AdminDashborad.module.css";
-import SideBar from "../components/nav/AdminSidBar";
+import SideBar from "../components/admin/AdminSidBar";
 import {Outlet} from "react-router-dom";
 
 function AdminLayout() {

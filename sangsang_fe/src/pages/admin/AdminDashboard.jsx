@@ -1,5 +1,5 @@
 import React from 'react';
-import SideBar from "../../components/nav/AdminSidBar";
+import SideBar from "../../components/admin/AdminSidBar";
 import styles from "./AdminDashborad.module.css"
 import {Outlet} from "react-router-dom";
 function AdminDashboard() {

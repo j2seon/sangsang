@@ -15,6 +15,7 @@ import UserAddPage from "./pages/user/UserAddPage";
 import UpdateUserInfo from "./pages/user/UpdateUserInfo";
 import AdminLayout from "./layouts/AdminLayout";
 import ProtectedRoute from "./layouts/ProtectedRoute";
+import MemberManageLayout from "./layouts/MemberManageLayout";
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
             </Route>
             <Route path="/admin" element={<AdminLayout/>}>
               <Route index element={<ProtectedRoute isAdmin={true} ><AdminDashboard/></ProtectedRoute>} />
-              <Route path="users" element={<ProtectedRoute isAdmin={true}/>}>
+              <Route path="users" element={<ProtectedRoute isAdmin={true}><MemberManageLayout/></ProtectedRoute>}>
                 <Route index element={<UserListPage/>}/>
                 <Route path="add" element={<UserAddPage/>}/>
                 <Route path=":userId" element={<UserInfo/>}/>

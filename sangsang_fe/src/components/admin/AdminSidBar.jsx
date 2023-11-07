@@ -1,8 +1,8 @@
 import React from 'react';
-import SideBarItem from "./SideBarItem";
+import SideBarItem from "../nav/SideBarItem";
 import {PersonOutline} from "@mui/icons-material";
 import ButtonInline from "../common/button/ButtomInline";
-import styles from "./Sidebar.module.css";
+import styles from "../nav/Sidebar.module.css";
 import {logout} from "../../api/auth/authApi";
 function AdminSidBar() {
 

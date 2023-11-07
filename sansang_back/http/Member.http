@@ -3,12 +3,12 @@ POST http://localhost:8081/api/v1/member/join
 Content-Type: application/json
 Accept: */*
 Access-Control-Allow-Origin: *
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5NzgyNzQsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODk3ODIzMSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.q5_KEiLiZaU-mbZnvaHuYr67e-T4ew8XIGpbRZuegiMbc7dQjLtXe6vsrANLnMerxdgVf1GO3oOrLCNOLAnvUA
+#Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTg5NzgyNzQsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5ODk3ODIzMSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.q5_KEiLiZaU-mbZnvaHuYr67e-T4ew8XIGpbRZuegiMbc7dQjLtXe6vsrANLnMerxdgVf1GO3oOrLCNOLAnvUA
 
 {
-  "memberId": "user",
-  "memberPwd": "user",
-  "memberName": "user",
+  "memberId": "admin",
+  "memberPwd": "admin",
+  "memberName": "admin",
   "zipCode": "1212",
   "address": "대전",
   "addressDetail": "예시",

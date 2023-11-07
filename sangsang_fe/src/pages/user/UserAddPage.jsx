@@ -6,6 +6,7 @@ import ButtonInline from "../../components/common/button/ButtomInline";
 import ImageInput from "../../components/common/input/ImageInput";
 import styles from "./UserAddPage.module.css";
 import {memberAdd} from "../../api/admin/adminApi";
+import AdminHeader from "../../components/admin/AdminHeader";
 
 function UserAddPage() {
   const [open, setOpen] = useState(false);
@@ -97,8 +98,10 @@ function UserAddPage() {
   }
 
   return (
-      <div className={styles.wrap}>
-        <div className={styles.title}>회원 등록</div>
+      <>
+        <AdminHeader
+            value={"회원등록"}
+        />
         <div className={styles.container}>
           <ImageInput
               style={style}
@@ -175,7 +178,7 @@ function UserAddPage() {
             />
           </div>
         </div>
-      </div>
+      </>
 
   );
 }
