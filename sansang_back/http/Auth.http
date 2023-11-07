@@ -5,8 +5,8 @@ Accept: */*
 Access-Control-Allow-Origin: *
 
 {
-  "id": "admin",
-  "pwd": "admin"
+  "id": "test",
+  "pwd": "test"
 
 }
 
@@ -15,7 +15,7 @@ POST http://localhost:8081/auth/logout
 Content-Type: application/json
 Accept: */*
 Access-Control-Allow-Origin: *
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTkyODQ2NjksInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5OTI0MTQ2OSwiYXV0aCI6IlJPTEVfQURNSU4iLCJtZW1iZXJJZCI6ImFkbWluIn0.-9JxtoYZNE9d55Qif0tD57SLs-8v54j2NNJSn4lHrK8qTcB6dp9yKNT44FxzYKnm8JOkd-cVA2upx6jqkWXbwQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2OTkzNzMyNzcsInN1YiI6ImFjY2Vzcy10b2tlbiIsImlhdCI6MTY5OTMzMDA3NywiYXV0aCI6IlJPTEVfVVNFUiIsIm1lbWJlcklkIjoidGVzdCJ9.iQeZb7Cha8DLL3u6li59rKwbNUfVwajT7e_6A-vgQoBUfHnyvnaij1cdkwO92Z_XXFOWP_nfcpZpudSIw8TgAA
 
 
 ### 토큰 재발급

@@ -21,6 +21,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${files.add-resource-locations}")
     private String ADD_RESOURCE_IMG_URL;
 
+    @Value("${files.file-dir}")
+    private String ADD_IMG_DIR;
+
+    @Value("${files.file-url}")
+    private String ADD_IMG_URL;
+
     @Bean
     public RestTemplate restTemplate(){
         return new RestTemplate();
@@ -36,7 +42,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(ADD_IMG_RESOURCE_LOCATION)
-          .addResourceLocations(ADD_RESOURCE_IMG_URL);
+        registry.addResourceHandler(ADD_RESOURCE_IMG_URL)
+          .addResourceLocations(ADD_IMG_RESOURCE_LOCATION);
+
+        registry.addResourceHandler(ADD_IMG_URL)
+          .addResourceLocations("file:" + ADD_IMG_DIR);
     }
 }

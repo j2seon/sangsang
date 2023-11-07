@@ -9,8 +9,8 @@ export const AuthContextProvider = ({children}) => {
     
     // 유저 내용 담기
     const [user, setUser] = useState({
-        isAuthenticated: true,
-        auth: "ADMIN",
+        isAuthenticated: false,
+        auth: "",
         memberId: "",
     });
 
@@ -27,6 +27,7 @@ export const AuthContextProvider = ({children}) => {
             console.log("User Updated:", newUser); // Debugging: Log the updated user
             setUser(newUser);
         }
+        console.log(user)
     }, []);
 
 

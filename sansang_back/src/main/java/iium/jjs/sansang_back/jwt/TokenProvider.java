@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.jwt;
 
 import iium.jjs.sansang_back.exception.TokenException;
+import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
 import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
@@ -162,13 +163,22 @@ public class TokenProvider {
         }
     }
 
+    String getRefreshToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        return Arrays.stream(cookies)
+          .filter(cookie -> cookie.getName().equals("sangRefresh"))
+          .findAny()
+          .map(Cookie::getValue)
+          .orElseThrow(() -> new RefreshTokenException("Cookie 없음"));
+    }
+
+
     public void deleteCookie(Cookie cookies, HttpServletResponse response) {
             cookies.setMaxAge(0);
             cookies.setPath("/");
             response.addCookie(cookies);
     }
-
-
 
     // 토큰 유효성 검사
     public boolean accessValidateToken(String token) {
@@ -178,14 +188,17 @@ public class TokenProvider {
             return true;
         } catch (ExpiredJwtException e) {
             log.info("[TokenProvider] 만료된 JWT 토큰입니다.");
+            throw new TokenException("만료된 JWT 토큰입니다");
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("[TokenProvider] 잘못된 JWT 서명입니다.");
+            throw new TokenException("AccessToken ERROR");
         } catch (UnsupportedJwtException e) {
             log.info("[TokenProvider] 지원되지 않는 JWT 토큰입니다.");
+            throw new TokenException("AccessToken ERROR");
         } catch (IllegalArgumentException e) {
             log.info("[TokenProvider] JWT 토큰이 잘못되었습니다.");
+            throw new TokenException("AccessToken ERROR");
         }
-        return false;
     }
 
     public boolean refreshValidateToken(String token) {
@@ -195,14 +208,17 @@ public class TokenProvider {
             return true;
         } catch (ExpiredJwtException e) {
             log.info("[TokenProvider] 만료된 JWT 토큰입니다.");
+            throw new RefreshTokenException("RefreshToken ERROR");
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("[TokenProvider] 잘못된 JWT 서명입니다.");
+            throw new RefreshTokenException("RefreshToken ERROR");
         } catch (UnsupportedJwtException e) {
             log.info("[TokenProvider] 지원되지 않는 JWT 토큰입니다.");
+            throw new RefreshTokenException("RefreshToken ERROR");
         } catch (IllegalArgumentException e) {
             log.info("[TokenProvider] JWT 토큰이 잘못되었습니다.");
+            throw new RefreshTokenException("RefreshToken ERROR");
         }
-        return false;
     }
 
 

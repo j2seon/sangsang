@@ -25,7 +25,6 @@ function App() {
             <Route path="/" element={<PrivateRoute/>}>
               <Route index element={<Main/>}/>
             </Route>
-
             <Route path="/admin" element={<AdminLayout/>}>
               <Route index element={<ProtectedRoute isAdmin={true} ><AdminDashboard/></ProtectedRoute>} />
               <Route path="users" element={<ProtectedRoute isAdmin={true}/>}>

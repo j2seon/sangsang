@@ -1,5 +1,7 @@
 package iium.jjs.sansang_back.member.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.querydsl.core.annotations.QueryProjection;
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
 import iium.jjs.sansang_back.member.entity.Member;
 import lombok.*;
@@ -30,11 +32,14 @@ public class MemberDto {
 
     private String auth;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime deletedAt;
 
     @Builder
+    @QueryProjection
     public MemberDto(String memberId, String memberPwd, String memberName, String zipCode, String address, String addressDetail, String profile, String auth, LocalDateTime createdAt, LocalDateTime deletedAt) {
         this.memberId = memberId;
         this.memberPwd = memberPwd;

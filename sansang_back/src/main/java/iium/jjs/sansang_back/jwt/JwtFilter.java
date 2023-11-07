@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -35,38 +37,35 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = tokenProvider.resolveToken(request);
+        log.info("[jwtFilter] accessToken = {}",accessToken);
 
         if(request.getRequestURI().equals("/auth/reissue")){
-            String refreshToken = getRefreshToken(request);
+
+            String refreshToken = tokenProvider.getRefreshToken(request);
+            log.info("[jwtFilter] refreshToken = {}",refreshToken);
+
             if(!tokenProvider.refreshValidateToken(refreshToken)){
-                // 쿠키도 삭제
-                tokenProvider.deleteCookie(request.getCookies(), response);
-                throw new RefreshTokenException("RefreshToken ERROR");
+                Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            Authentication authentication = tokenProvider.getAuthentication(refreshToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        if (accessToken != null) {
-            if(!tokenProvider.accessValidateToken(accessToken)) throw new TokenException("AccessToken ERROR");
+
+        if (accessToken != null && tokenProvider.accessValidateToken(accessToken)) {
+            log.info("[jwtFilter] access start");
 
             if (!request.getRequestURI().equals("/auth/reissue")) {
+                log.info("[jwtFilter] access auth 지정");
                 Authentication authentication = tokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+        log.info("[jwtFilter] end");
+
         filterChain.doFilter(request, response);
 
     }
 
-    private String getRefreshToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
 
-        return Arrays.stream(cookies)
-          .filter(cookie -> cookie.getName().equals("sangRefresh"))
-          .findAny()
-          .map(Cookie::getValue)
-          .orElseThrow(() -> new RefreshTokenException("Cookie 없음"));
-    }
 
 }

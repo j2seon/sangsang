@@ -31,6 +31,11 @@ api.interceptors.response.use(
     if (response.status === 401) {
       const originRequest = config;
 
+      if(originRequest.url === 'auth/logout'){
+        localStorage.removeItem('accessToken');
+        return Promise.reject(error);
+      }
+
       const response = await refresh();
       if (response.status === 200) {
         const newAccessToken = response.data.token;

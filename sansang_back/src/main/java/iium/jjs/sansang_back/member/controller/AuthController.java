@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Queue;
 
 @Slf4j
 @RestController
@@ -51,7 +52,6 @@ public class AuthController {
     public ResponseEntity<ResponseDto> logout(@AuthenticationPrincipal MemberDetailImpl memberDetail, @CookieValue(value = "sangRefresh", required = false) Cookie cookie){
 
         authService.logout(memberDetail.getUsername());
-
 
         log.info("Cookie={}", cookie.getValue());
         log.info("Cookie={}", cookie.getMaxAge());

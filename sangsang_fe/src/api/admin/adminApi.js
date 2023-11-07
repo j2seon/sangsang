@@ -15,3 +15,23 @@ export const memberAdd = async (user)  => {
       return err.response;
     });
 };
+
+export const selectMember = async (memberId)  => {
+  const requestUrl = `api/v1/member/${memberId}`;
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+  }
+  console.log(memberId)
+  return await api.get(requestUrl, {
+    headers: headers
+  })
+    .then(res => {
+      console.log(res)
+      return res.data;
+    })
+    .catch(err => {
+      console.error("요청 실패:", err);
+      throw err;
+    });
+};
+

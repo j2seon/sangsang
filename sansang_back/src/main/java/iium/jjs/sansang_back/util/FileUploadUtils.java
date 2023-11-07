@@ -1,4 +1,4 @@
-package iium.jjs.sansang_back.common;
+package iium.jjs.sansang_back.util;
 
 import iium.jjs.sansang_back.exception.FileUploadException;
 import lombok.extern.slf4j.Slf4j;

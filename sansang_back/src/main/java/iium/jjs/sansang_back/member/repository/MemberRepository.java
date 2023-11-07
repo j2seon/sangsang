@@ -11,6 +11,4 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     Optional<Member> findByMemberId(String memberId);
 
-    Page<Member> findByMemberIdContains(String memberId, Pageable pageable);
-
 }

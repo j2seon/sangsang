@@ -10,6 +10,6 @@ public class PagingResponseDTO {
 
   private Object data;
 
-//  private Pagedto pageInfo;
+  private PageDto pageInfo;
 
 }

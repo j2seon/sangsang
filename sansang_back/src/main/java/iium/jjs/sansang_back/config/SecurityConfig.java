@@ -31,6 +31,8 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtFilter jwtFilter;
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -60,14 +62,15 @@ public class SecurityConfig {
                 .and()
                 .httpBasic().disable()
                 .formLogin().disable()
-                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and() //예외처리
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint) //customEntryPoint
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and() // 인증
                 .authorizeRequests()
+//                .antMatchers("/auth/logout").hasAnyRole("ADMIN","USER")
                 .antMatchers("/api/v1/member/*").hasRole("ADMIN")
                 .anyRequest().permitAll() //
                 .and();

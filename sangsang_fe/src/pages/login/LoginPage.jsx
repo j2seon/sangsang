@@ -15,14 +15,6 @@ function LoginPage() {
         pwd:'',
     });
 
-    // useEffect(() => {
-    //     if(user.auth.includes("ADMIN")){
-    //         navigate("/admin");
-    //     }else{
-    //         navigate("/");
-    //     }
-    // }, []);
-
     const handleChange = (e) => {
         const { value, name } = e.target;
         setForm({
@@ -39,11 +31,13 @@ function LoginPage() {
                 const {accessToken, auth, memberId} = res.data;
                 setUser({auth, memberId, isAuthenticated: true});
                 localStorage.setItem("accessToken", accessToken);
+
                 if(auth.includes("ADMIN")){
                     navigate("/admin");
                 }else{
                     navigate("/");
                 }
+
             })
             .catch(err => {
                 console.log(err);

@@ -1,10 +1,11 @@
 package iium.jjs.sansang_back.member.service;
 
-import iium.jjs.sansang_back.common.FileUploadUtils;
+import iium.jjs.sansang_back.util.FileUploadUtils;
 import iium.jjs.sansang_back.exception.FileUploadException;
 import iium.jjs.sansang_back.exception.NotFoundMemberException;
 import iium.jjs.sansang_back.member.dto.request.JoinDto;
 import iium.jjs.sansang_back.member.dto.request.MemberInfoDto;
+import iium.jjs.sansang_back.member.dto.request.SearchMemberDto;
 import iium.jjs.sansang_back.member.dto.response.MemberDto;
 import iium.jjs.sansang_back.member.entity.Address;
 import iium.jjs.sansang_back.member.entity.Authority;
@@ -22,8 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -65,11 +64,9 @@ public class MemberService {
     }
 
     // 전체 조회 -> 페이징 처리하기
-    public Page<MemberDto> getAllMember(String keyword, Pageable pageable) {
+    public Page<MemberDto> getAllMember(SearchMemberDto search, Pageable pageable) {
 
-//        List<Member> findAllMember = memberRepository
-
-        return findAllMember.stream().map(MemberDto::new).collect(Collectors.toList());
+        return memberRepository.conditionList(search, pageable);
     }
 
     // 한명 조회

@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import axios from "axios";
+import {api} from "../customAxios";
 
 
 const ACCESS_TOKEN = "accessToken";
@@ -23,7 +24,7 @@ export const logout = async () => {
   const requestUrl = 'http://localhost:8081/auth/logout';
   const header = {'Content-Type': 'application/json'}
 
-  return await axios.post(requestUrl, {headers: header})
+  return await api.post(requestUrl, {headers: header})
     .then(res => {
       console.log(res);
       localStorage.removeItem(ACCESS_TOKEN);

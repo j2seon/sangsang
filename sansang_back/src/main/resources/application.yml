@@ -42,10 +42,10 @@ jwt:
 
 files:
   add-resource-locations: classpath:/static/member/profile/
-  add-resource-handler: /member/profile
+  add-resource-handler: /member/profile/**
 
-  file-dir: src/main/resources/static/member/profile
-  file-url: http://localhost:8080/member/profile/
+  file-dir: C:/sangsang/member/profile/
+  file-url: /member/profile/**
 
 
 logging:
