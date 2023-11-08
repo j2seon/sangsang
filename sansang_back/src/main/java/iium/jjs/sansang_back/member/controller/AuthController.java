@@ -4,6 +4,7 @@ import iium.jjs.sansang_back.common.dto.ResponseDto;
 import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
+import iium.jjs.sansang_back.member.dto.response.LoginResponseDto;
 import iium.jjs.sansang_back.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +38,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response){
 
-        TokenDto tokenDto = authService.login(loginDto, response);
+        TokenDto login = authService.login(loginDto, response);
+
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()
                         .status(HttpStatus.OK)
-                        .data(tokenDto)
-                        .message(tokenDto.getMemberId() + "님 로그인 성공")
+                        .data(login)
+                        .message(login.getMemberId() + "님 로그인 성공")
                         .build());
     }
 

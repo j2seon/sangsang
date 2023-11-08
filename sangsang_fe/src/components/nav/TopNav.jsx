@@ -7,6 +7,7 @@ import {useAuth} from "../../context/AuthContext";
 export default function TopNav() {
     const {user} = useAuth();
 
+
     return (
         <div className={styles.topNav_wrap}>
             <Logo
@@ -15,7 +16,9 @@ export default function TopNav() {
             />
             <div className={styles.profile}>
                 <p className={styles.profile_name}>{user.memberId}</p>
-                <Avatar isLink={user.isAuthenticated}/>
+                <Avatar isLink={user.isAuthenticated}
+                        profile={user.profile}
+                />
             </div>
         </div>
     );

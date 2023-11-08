@@ -9,9 +9,10 @@ export const AuthContextProvider = ({children}) => {
     
     // 유저 내용 담기
     const [user, setUser] = useState({
-        isAuthenticated: true,
-        auth: "ADMIN",
-        memberId: "admin",
+        isAuthenticated: false,
+        auth: "",
+        memberId: "",
+        profile: "",
     });
 
     useEffect(()=>{
@@ -23,8 +24,9 @@ export const AuthContextProvider = ({children}) => {
                 isAuthenticated: true,
                 auth: decodeToken.auth,
                 memberId: decodeToken.memberId,
+                profile: decodeToken.profile,
             };
-            console.log("User Updated:", newUser); // Debugging: Log the updated user
+            console.log("User Updated:", newUser);
             setUser(newUser);
         }
         console.log(user)

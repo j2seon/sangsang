@@ -41,11 +41,12 @@ function UserInfo() {
         ...data.data
       }));
     }
-  }, [data]);
+  }, [data, userId]);
 
   const style = {
     maxWidth: '150px'
   }
+
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -58,20 +59,19 @@ function UserInfo() {
     setIsEditing(!isEditing);
   };
 
+
   const handleChange = (e) => {
     const {value, name} = e.target;
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value
     }));
-    console.log(form)
   }
   const handleFile = (file) => {
     setForm((prev) => ({
       ...prev,
       profile: file
     }));
-    console.log(form);
   }
 
   // const handleComplete = (data) => {

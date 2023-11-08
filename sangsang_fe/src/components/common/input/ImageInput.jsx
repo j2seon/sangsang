@@ -4,11 +4,7 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import {handleImgError} from "../../../util/imgUtil";
 
 function ImageInput({onImageChange, style, img}) {
-  const [image, setImage] = useState(img);
 
-  const notionToken = process.env.SERVER_IMG_URL;
-  console.log(notionToken)
-  console.log(img)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -16,7 +12,6 @@ function ImageInput({onImageChange, style, img}) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setImage(event.target.result);
         onImageChange(file);
       };
       reader.readAsDataURL(file);
@@ -36,7 +31,7 @@ function ImageInput({onImageChange, style, img}) {
         <label htmlFor="imageInput" >
           <div className={styles.img_wrap}>
             <img
-              src={process.env.ser+ `${img}`}
+              src={img ? process.env.REACT_APP_SERVER_IMG_URL+img : '/img/default.png'}
               alt="Profile"
               style={style}
               // onError={handleImgError}

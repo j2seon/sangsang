@@ -51,6 +51,10 @@ public class MemberController {
 
         Page<MemberDto> allMember = memberService.getAllMember(searchMemberDto, pageable);
 
+        log.info("searchMemberDto={}", searchMemberDto);
+        log.info("pageable={}", pageable);
+
+
         PageDto pageInfo = PageDto.builder()
           .page(allMember.getNumber())
           .total(allMember.getTotalElements())

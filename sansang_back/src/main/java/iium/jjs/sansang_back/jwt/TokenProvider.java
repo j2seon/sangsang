@@ -70,6 +70,7 @@ public class TokenProvider {
                 .setIssuedAt(new Date())
                 .claim(AUTHORITIES_KEY, member.getAuthority())
                 .claim(MEMBER_ID, member.getMemberId())
+                .claim("profile", member.getProfile())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }

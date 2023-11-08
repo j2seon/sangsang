@@ -26,13 +26,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     List<MemberDto> content = queryFactory
       .select(new QMemberDto(
               member.memberId,
-              member.memberName,
               member.memberPwd,
+              member.memberName,
               member.address.zipCode,
               member.address.address,
               member.address.addressDetail,
-              member.authority.stringValue(),
               member.profile,
+              member.authority.stringValue(),
               member.createdAt,
               member.deletedAt
       )).from(member)

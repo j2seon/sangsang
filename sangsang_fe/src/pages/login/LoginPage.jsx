@@ -27,9 +27,8 @@ function LoginPage() {
     const handleSubmit = () => {
         login(form)
             .then(res => {
-                console.log(res);
-                const {accessToken, auth, memberId} = res.data;
-                setUser({auth, memberId, isAuthenticated: true});
+                const {accessToken, auth, memberId, profile} = res.data;
+                setUser({auth, memberId, isAuthenticated: true, profile: profile});
                 localStorage.setItem("accessToken", accessToken);
 
                 if(auth.includes("ADMIN")){

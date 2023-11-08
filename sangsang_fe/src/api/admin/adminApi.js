@@ -35,18 +35,25 @@ export const selectMember = async (memberId)  => {
     });
 };
 
-export const memberList = async ()  => {
+export const memberList = async (pageInfo)  => {
   const requestUrl = `api/v1/member/members`;
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   }
 
+  console.log("page=",pageInfo)
+
   return await api.get(requestUrl, {
-    headers: headers
+    headers: headers,
+    params : {
+      kind: pageInfo.kind,
+      content: pageInfo.content,
+      size: pageInfo.size,
+      page: pageInfo.page
+    }
   })
       .then(res => {
-        console.log(res)
-        return res.data;
+        return res.data.data;
       })
       .catch(err => {
         console.error("요청 실패:", err);

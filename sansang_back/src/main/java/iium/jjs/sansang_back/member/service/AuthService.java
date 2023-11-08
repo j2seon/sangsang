@@ -7,6 +7,7 @@ import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
 import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.jwt.TokenProvider;
 import iium.jjs.sansang_back.member.dto.request.LoginDto;
+import iium.jjs.sansang_back.member.dto.response.LoginResponseDto;
 import iium.jjs.sansang_back.member.entity.Member;
 import iium.jjs.sansang_back.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,9 @@ public class AuthService {
         ResponseCookie cookie = tokenProvider.generateRefreshTokenInCookie(refreshToken);
         response.setHeader("Set-Cookie", cookie.toString());
 
-        return TokenDto.builder()
+
+
+          return TokenDto.builder()
                 .auth(member.getAuthority().toString())
                 .memberId(member.getMemberId())
                 .accessToken(accessToken)
