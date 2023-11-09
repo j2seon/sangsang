@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast';
 import React, {useEffect, useState} from 'react';
 import styles from "./UserAddPage.module.css";
 import ImageInput from "../../components/common/input/ImageInput";
@@ -10,6 +9,9 @@ import {selectMember} from "../../api/admin/adminApi";
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {LoadingSpinner} from "../../components/common/other/LoadingSpinner";
+import AdminHeader from "../../components/admin/AdminHeader";
+import SelectEle from "../../components/common/select/SelectEle";
+import {changeAuth} from "../../util/validationUtil";
 
 function UserInfo() {
   const {userId} = useParams();
@@ -19,8 +21,8 @@ function UserInfo() {
 
   const [form, setForm] = useState({
     memberId: '',
-    memberPwd: '',
     memberName: '',
+    auth: '',
     profile: '',
     zipCode: '',
     address: '',
@@ -38,7 +40,7 @@ function UserInfo() {
       // Update the form state with the data
       setForm((prev) => ({
         ...prev,
-        ...data.data
+        ...data.data, auth: changeAuth(data.data.auth)
       }));
     }
   }, [data, userId]);
@@ -62,35 +64,37 @@ function UserInfo() {
 
   const handleChange = (e) => {
     const {value, name} = e.target;
+    console.log(value, name)
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value
     }));
+    console.log(form)
   }
   const handleFile = (file) => {
     setForm((prev) => ({
       ...prev,
-      profile: file
+      'profile': file
     }));
   }
 
-  // const handleComplete = (data) => {
-  //   let fullAddress = data.address;
-  //   const code = data.zonecode;
-  //   let extraAddress = '';
-  //
-  //   if (data.addressType === 'R') {
-  //     if (data.bname !== '') {
-  //       extraAddress += data.bname;
-  //     }
-  //     if (data.buildingName !== '') {
-  //       extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
-  //     }
-  //     fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
-  //   }
-  //   setForm({...form, address: fullAddress, zipCode: code});
-  //   setOpen(false);
-  // }
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    const code = data.zonecode;
+    let extraAddress = '';
+
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== '') {
+        extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
+      }
+      fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
+    }
+    setForm({ ...form, address : fullAddress, zipCode: code});
+    setOpen(false);
+  }
 
   if (isLoading) {
     return <LoadingSpinner/>;
@@ -102,51 +106,59 @@ function UserInfo() {
   }
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.title}>회원 조회</div>
+    <>
+      {
+        isEditing ?
+          <AdminHeader
+            value={"회원수정"}
+          />  
+          :
+          <AdminHeader
+            value={"회원세부"}
+          />
+      }
       <div className={styles.container}>
-        {/* avatar로 바꾸면 될듯 */}
         <ImageInput
           style={style}
           img={form.profile}
+          isEditing={isEditing}
           onImageChange={handleFile}
         />
         <div className={styles.input_wrap}>
           <div className={styles.space}>
-            <label htmlFor="id">아이디</label>
+            <label htmlFor="memberId">아이디</label>
             <InputEle
-              id="id"
-              name='id'
+              id="memberId"
+              name='memberId'
               value={form.memberId}
               placeholder="아이디"
-              disabled={!isEditing}
+              disabled
               onChange={handleChange}
             />
           </div>
-          {
-            isEditing ?
-              <div className={styles.space}>
-                <label htmlFor="pwd">비밀번호</label>
-                <InputEle
-                  id="pwd"
-                  name='pwd'
-                  type="password"
-                  value={form.memberPwd}
-                  placeholder="비밀번호"
-                  onChange={handleChange}
-                />
-              </div>
-              : ""
-          }
           <div className={styles.space}>
-            <label htmlFor="name">이름</label>
+            <label htmlFor="memberName">이름</label>
             <InputEle
-              id="name"
-              name='name'
+              id="memberName"
+              name='memberName'
               placeholder="이름"
               value={form.memberName}
               disabled={!isEditing}
               onChange={handleChange}
+            />
+          </div>
+          <div className={styles.space}>
+            <label htmlFor="auth">권한</label>
+            <SelectEle
+              id="auth"
+              name="auth"
+              disabled={!isEditing}
+              value={form.auth}
+              onChange={handleChange}
+              options={[
+                {id:1, value:'ADMIN', text:'관리자'},
+                {id:2, value:'USER', text:'일반회원'},
+              ]}
             />
           </div>
           <div className={styles.space}>
@@ -162,15 +174,14 @@ function UserInfo() {
               />
               {!isEditing ? "" :
                 <>
-                  <ButtonInline value="검색" style={{width: '100px'}}/>
+                  <ButtonInline onClick={handleOpenModal} value="검색" style={{width: '100px'}}/>
                   {open && (
                     <Modal
                       title="주소검색"
-                      // onConfirm={}
                       onCancel={handleCloseModal}
                     >
                       <DaumPostcode
-                        // onComplete={handleComplete}
+                        onComplete={handleComplete}
                       />
                     </Modal>
                   )}
@@ -186,10 +197,8 @@ function UserInfo() {
               onChange={handleChange}
             />
           </div>
-
         </div>
         <div>
-
           {
             isEditing ?
               <>
@@ -213,8 +222,7 @@ function UserInfo() {
           }
         </div>
       </div>
-    </div>
-
+    </>
   );
 }
 

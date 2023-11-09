@@ -3,8 +3,14 @@ import * as React from 'react';
 import {IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import dayjs from "dayjs";
 import {Delete} from "@mui/icons-material";
+import {useNavigate} from "react-router-dom";
+import {LoadingSpinner} from "../other/LoadingSpinner";
 
 const BasicTable = ({list, tableHeadData, color}) => {
+  const navigate = useNavigate();
+
+
+  if(!list) return <LoadingSpinner/>;
 
   return (
       <TableContainer component={Paper}>
@@ -22,7 +28,8 @@ const BasicTable = ({list, tableHeadData, color}) => {
             {list.map((row) => (
                 <TableRow
                     key={row.memberId}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor:'pointer'}}
+                    onClick={()=> navigate(`${row.memberId}`)}
                 >
                   <TableCell component="th" scope="row">
                     {row.memberId}

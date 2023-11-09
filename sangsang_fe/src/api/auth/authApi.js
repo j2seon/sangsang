@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import axios from "axios";
 import {api} from "../customAxios";
+import {useAuth} from "../../context/AuthContext";
 
 
 const ACCESS_TOKEN = "accessToken";
@@ -11,12 +12,14 @@ export const login = async (user) => {
 
   return await axios.post(requestUrl, user, {headers: header})
     .then(res => {
-      console.log(res.data)
-      return res.data;
+      const { accessToken, auth, memberId, profile } = res.data;
+      localStorage.setItem('accessToken', accessToken);
+
+      return { auth, memberId, isAuthenticated: true, profile: profile}
     })
     .catch(err => {
       console.log(err.response)
-      return err.response.data;
+      return null;
     });
 };
 

@@ -25,27 +25,11 @@ function LoginPage() {
     }
 
     const handleSubmit = () => {
-        login(form)
-            .then(res => {
-                const {accessToken, auth, memberId, profile} = res.data;
-                setUser({auth, memberId, isAuthenticated: true, profile: profile});
-                localStorage.setItem("accessToken", accessToken);
-
-                if(auth.includes("ADMIN")){
-                    navigate("/admin");
-                }else{
-                    navigate("/");
-                }
-
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        const loginUser = login(form);
+        if(loginUser){
+            setUser(loginUser);
+        }
     }
-
-    // if(user.isAuthenticated && user.auth.includes("ADMIN")){
-    //     return <Navigate to="/admin" replace/>;
-    // }
 
     if(user.isAuthenticated && !user.auth.includes("ADMIN")){
         return <Navigate to="/" replace/>;

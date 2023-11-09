@@ -9,9 +9,10 @@ const ProtectedRoute = ({children, isAdmin}) => {
         return null;
     }
 
-    if (user.isAuthenticated && !isUserAdmin) {
-        return <Navigate to="/" replace/>;
-    }
+    //if (user.isAuthenticated && !isUserAdmin) {
+     //   console.log("ghrtl...")
+     //   return <Navigate to="/" replace/>;
+   // }
     console.log(user)
 
     return children ? children : <Outlet/>;

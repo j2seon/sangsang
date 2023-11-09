@@ -21,20 +21,23 @@ function UserListPage() {
 
   const [pageData, setPageData] = useState(null);
 
-  const {isLoading, isError, data, isFetching} = useQuery({
+  const {isLoading, isError, data} = useQuery({
     queryKey: ["memberList", paramData],
-    queryFn: () => memberList(paramData),
+    queryFn: async () => memberList(paramData),
+    staleTime : 60 * 1000
   });
 
   useEffect(() => {
-
+    //console.log(data)
     if (data) {
       setPageData({
-        list: data.data, paging: data.pageInfo
+        list: data?.data, paging: data.pageInfo
       })
     }
+    console.log(data)
+    return ()=>{
+    }
   }, [data, search]);
-  console.log(pageData)
 
   const handlePageChange = (event, newPage) => {
     navigate({
@@ -48,14 +51,13 @@ function UserListPage() {
     console.log(newPage)
   };
 
-  if (isLoading || !pageData) {
+  if (isLoading) {
     return <LoadingSpinner/>;
   }
 
   if (isError) {
     return <div> 오류발생! 오류페이지로 대체하자</div>
   }
-
   return (
     <>
       <AdminHeader

@@ -27,15 +27,14 @@ function App() {
               <Route index element={<Main/>}/>
             </Route>
             <Route path="/admin" element={<AdminLayout/>}>
-              <Route index element={<ProtectedRoute isAdmin={true} ><AdminDashboard/></ProtectedRoute>} />
-              <Route path="users" element={<ProtectedRoute isAdmin={true}><MemberManageLayout/></ProtectedRoute>}>
+              <Route index element={<AdminDashboard/>} />
+              <Route path="users" element={<MemberManageLayout/>}>
                 <Route index element={<UserListPage/>}/>
                 <Route path="add" element={<UserAddPage/>}/>
                 <Route path=":userId" element={<UserInfo/>}/>
                 <Route path=":userId/edit" element={<UpdateUserInfo/>}/>
               </Route>
             </Route>
-
           </Route>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="*" element={<NotFound/>}/>

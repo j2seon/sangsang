@@ -21,12 +21,10 @@ export const selectMember = async (memberId)  => {
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   }
-  console.log(memberId)
   return await api.get(requestUrl, {
     headers: headers
   })
     .then(res => {
-      console.log(res)
       return res.data;
     })
     .catch(err => {
@@ -40,8 +38,6 @@ export const memberList = async (pageInfo)  => {
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   }
-
-  console.log("page=",pageInfo)
 
   return await api.get(requestUrl, {
     headers: headers,
@@ -59,4 +55,17 @@ export const memberList = async (pageInfo)  => {
         console.error("요청 실패:", err);
         throw err;
       });
+};
+
+export const memberUpdate = async (user)  => {
+  const requestUrl = '/api/v1/member/join';
+
+  return await api.post(requestUrl, user )
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err)
+      return err.response;
+    });
 };
