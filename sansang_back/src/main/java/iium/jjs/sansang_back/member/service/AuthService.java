@@ -34,7 +34,7 @@ public class AuthService {
 
     private final RedisService redisService;
 
-    public TokenDto login(LoginDto loginDto, HttpServletResponse response){
+    public LoginResponseDto login(LoginDto loginDto, HttpServletResponse response){
 
         Member member = memberRepository.findByMemberId(loginDto.getId()).orElseThrow(() -> new NotFoundMemberException("해당 아이디가 존재하지 않습니다."));
        if(!passwordEncoder.matches(loginDto.getPwd(), member.getMemberPwd())){
@@ -52,14 +52,14 @@ public class AuthService {
         ResponseCookie cookie = tokenProvider.generateRefreshTokenInCookie(refreshToken);
         response.setHeader("Set-Cookie", cookie.toString());
 
+      TokenDto tokenDto = TokenDto.builder()
+        .auth(member.getAuthority().toString())
+        .memberId(member.getMemberId())
+        .accessToken(accessToken)
+        .accessTokenExpiredTime(tokenProvider.getExpiredDate(accessToken))
+        .build();
 
-
-          return TokenDto.builder()
-                .auth(member.getAuthority().toString())
-                .memberId(member.getMemberId())
-                .accessToken(accessToken)
-                .accessTokenExpiredTime(tokenProvider.getExpiredDate(accessToken))
-                .build();
+      return LoginResponseDto.builder().tokenDto(tokenDto).profile(member.getProfile()).build();
     }
 
     // 로그아웃

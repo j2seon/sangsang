@@ -5,6 +5,7 @@ import styles from './LoginPage.module.css';
 import ButtonInline from "../../components/common/button/ButtomInline";
 import {useAuth} from "../../context/AuthContext";
 import {Navigate, useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -21,18 +22,32 @@ function LoginPage() {
             ...form,
             [name]: value
         });
-        console.log(user)
     }
 
-    const handleSubmit = () => {
-        const loginUser = login(form);
-        if(loginUser){
-            setUser(loginUser);
+    const handleSubmit = async () => {
+        const loginUser = await login(form);
+        console.log(loginUser)
+        if (!loginUser) {
+            return ;
+        }
+        setUser(loginUser);
+
+        if(user?.auth.includes("ADMIN")){
+            navigate("/admin");
+        }else{
+            navigate("/");
         }
     }
 
-    if(user.isAuthenticated && !user.auth.includes("ADMIN")){
+    console.log(user)
+    if(user?.isAuthenticated && !user?.auth.includes("ADMIN")){
+        console.log("이동")
         return <Navigate to="/" replace/>;
+    }
+
+    if(user?.isAuthenticated && user?.auth.includes("ADMIN")){
+        console.log("이동a")
+        return <Navigate to="/admin" replace/>;
     }
 
     return (

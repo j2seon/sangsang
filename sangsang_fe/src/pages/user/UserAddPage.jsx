@@ -5,12 +5,19 @@ import Modal from "../../components/common/modal/Modal";
 import ButtonInline from "../../components/common/button/ButtomInline";
 import ImageInput from "../../components/common/input/ImageInput";
 import styles from "./UserAddPage.module.css";
-import {memberAdd} from "../../api/admin/adminApi";
+import {memberAdd, memberUpdate} from "../../api/admin/adminApi";
 import AdminHeader from "../../components/admin/AdminHeader";
+import {useEdit} from "../../context/EditContext";
+import {useNavigate} from "react-router-dom";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
+const style ={
+  maxWidth: '150px'
+}
 function UserAddPage() {
   const [open, setOpen] = useState(false);
-
+  const {setImgEdit } = useEdit();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     id: '',
     pwd: '',
@@ -20,7 +27,15 @@ function UserAddPage() {
     address: '',
     addressDetail:''
   });
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation({
+    mutationFn:  async (data) => memberAdd(data),
+    onSuccess: () => {
+      navigate("/admin/users");
+      return queryClient.invalidateQueries({ queryKey: [form] })
+    },
+  })
   const handleChange = (e) => {
     const { value, name } = e.target;
     setForm((prevForm) => ({
@@ -36,10 +51,6 @@ function UserAddPage() {
       'profile': file
     }));
     console.log(form);
-  }
-
-  const style ={
-    maxWidth: '150px'
   }
 
   const handleOpenModal = () => {
@@ -62,21 +73,11 @@ function UserAddPage() {
     return formData;
   }
 
-  const handleRequest = () => {
+  const handleRequest = (e) => {
+    e.preventDefault();
     const formData = createFormData();
-    console.log(formData)
-    return memberAdd(formData);
-  }
-
-  const handelAddress = (address) => {
-    console.log(address);
-    setForm((prev) => ({
-      ...prev,
-      zipCode: address.zonecode,
-      address: address.address,
-    }));
-    handleCloseModal();
-
+    setImgEdit(false);
+    mutation.mutate(formData);
   }
 
   const handleComplete = (data) => {
@@ -167,7 +168,6 @@ function UserAddPage() {
                   onChange={handleChange}
               />
             </div>
-
           </div>
           <div>
             <ButtonInline

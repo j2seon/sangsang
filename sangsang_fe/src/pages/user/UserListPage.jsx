@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {createSearchParams, Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import AdminHeader from "../../components/admin/AdminHeader";
 import styles from "./UserListPage.module.css";
 import PaginationEx from "../../components/common/pagination/PaginationEx";
 import BasicTable from "../../components/common/table/BasicTable";
 
-import {memberList} from "../../api/admin/adminApi";
-import {useQuery} from "@tanstack/react-query";
+import {memberList, memberWithdrawal} from "../../api/admin/adminApi";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {LoadingSpinner} from "../../components/common/other/LoadingSpinner";
+import {useEdit} from "../../context/EditContext";
 
 function UserListPage() {
+  const queryClient = useQueryClient();
   const [search] = useSearchParams();
   const navigate = useNavigate();
+  const { setImgEdit, setFormEdit } = useEdit();
   const paramData = {
     page: search.get("page") || 0,
     size: search.get("size") || 10,
@@ -19,25 +22,18 @@ function UserListPage() {
     content: search.get("content") ?? ''
   }
 
-  const [pageData, setPageData] = useState(null);
-
-  const {isLoading, isError, data} = useQuery({
+  const {isPending, isError, data} = useQuery({
     queryKey: ["memberList", paramData],
     queryFn: async () => memberList(paramData),
-    staleTime : 60 * 1000
+    //staleTime : 60 * 1000
   });
 
-  useEffect(() => {
-    //console.log(data)
-    if (data) {
-      setPageData({
-        list: data?.data, paging: data.pageInfo
-      })
-    }
-    console.log(data)
-    return ()=>{
-    }
-  }, [data, search]);
+  const withdrawal = useMutation({
+    mutationFn : async (memberId) => memberWithdrawal(memberId),
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey:["memberList", paramData]})
+    },
+  });
 
   const handlePageChange = (event, newPage) => {
     navigate({
@@ -51,13 +47,21 @@ function UserListPage() {
     console.log(newPage)
   };
 
-  if (isLoading) {
+  const handleTableRow = (id) => {
+    setFormEdit(false);
+    navigate(`${id}`);
+  }
+
+
+  if (isPending) {
+    console.log("pending")
     return <LoadingSpinner/>;
   }
 
   if (isError) {
     return <div> 오류발생! 오류페이지로 대체하자</div>
   }
+
   return (
     <>
       <AdminHeader
@@ -67,17 +71,19 @@ function UserListPage() {
         <div className={styles.add}>
           <Link to="add">회원 추가</Link>
         </div>
-        <div>
+        <div className={styles.table}>
           <BasicTable
-            list={pageData?.list}
+            list={data?.data}
             tableHeadData={tableHeadData}
             color={{ backgroundColor: 'lightBlue' }}
+            onClick={handleTableRow}
+            onWithdrawal={withdrawal}
           />
         </div>
-        <div>
+        <div className={styles.paging}>
           <PaginationEx
-            count={pageData?.paging?.pageEnd}
-            page={pageData?.paging?.page}
+            count={data?.pageInfo?.pageEnd}
+            page={data?.pageInfo?.page}
             onChangePage={handlePageChange}
           />
         </div>

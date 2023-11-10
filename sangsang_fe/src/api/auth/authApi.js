@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import {api} from "../customAxios";
 import {useAuth} from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 
 const ACCESS_TOKEN = "accessToken";
@@ -12,13 +13,15 @@ export const login = async (user) => {
 
   return await axios.post(requestUrl, user, {headers: header})
     .then(res => {
-      const { accessToken, auth, memberId, profile } = res.data;
-      localStorage.setItem('accessToken', accessToken);
 
-      return { auth, memberId, isAuthenticated: true, profile: profile}
+      const {profile, tokenDto:{accessToken, accessTokenExpiredTime, auth, memberId,}} = res.data.data;
+
+      localStorage.setItem("accessToken", accessToken);
+
+      return {isAuthenticated: !!accessToken ,accessToken:accessToken, auth:auth, profile:profile }
     })
     .catch(err => {
-      console.log(err.response)
+      console.log(err.response.data)
       return null;
     });
 };
@@ -34,7 +37,8 @@ export const logout = async () => {
       return res.data;
     })
     .catch(err => {
-      console.log(err);
+      //에러 창 보여주는거
+      return null;
     });
 };
 

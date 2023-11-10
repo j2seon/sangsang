@@ -5,9 +5,15 @@ import dayjs from "dayjs";
 import {Delete} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {LoadingSpinner} from "../other/LoadingSpinner";
+import {authKor, changeAuth} from "../../../util/validationUtil";
 
-const BasicTable = ({list, tableHeadData, color}) => {
+const BasicTable = ({list, tableHeadData, color, onClick, onWithdrawal}) => {
   const navigate = useNavigate();
+
+  const handelWithdrawal = (memberId) => {
+    onWithdrawal.mutate(memberId);
+  }
+
 
 
   if(!list) return <LoadingSpinner/>;
@@ -26,23 +32,30 @@ const BasicTable = ({list, tableHeadData, color}) => {
           </TableHead>
           <TableBody>
             {list.map((row) => (
-                <TableRow
-                    key={row.memberId}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor:'pointer'}}
-                    onClick={()=> navigate(`${row.memberId}`)}
-                >
-                  <TableCell component="th" scope="row">
+                <TableRow key={row.memberId} sx={{ '&:last-child td, &:last-child th': { border: 0 }, }}>
+                  <TableCell component="th"
+                             scope="row"
+                             sx={{cursor:'pointer'}}
+                             onClick={()=> onClick(row.memberId)}>
                     {row.memberId}
                   </TableCell>
                   <TableCell>{row.memberName}</TableCell>
-                  <TableCell>{row.auth}</TableCell>
+                  <TableCell>{authKor(row.auth)}</TableCell>
                   <TableCell>{row.zipCode}</TableCell>
                   <TableCell>{row.address}</TableCell>
                   <TableCell>{row.createdAt}</TableCell>
                   <TableCell>
-                    <IconButton aria-label="delete">
-                      <Delete />
-                    </IconButton>
+                    {
+                      row.deletedAt ?
+                        row.deletedAt
+                        :
+                        <IconButton aria-label="delete"
+                                    onClick={()=>{
+                                      handelWithdrawal(row.memberId)
+                                    }}>
+                          <Delete />
+                        </IconButton>
+                    }
                   </TableCell>
                 </TableRow>
             ))}

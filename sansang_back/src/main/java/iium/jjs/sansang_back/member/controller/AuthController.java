@@ -38,14 +38,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response){
 
-        TokenDto login = authService.login(loginDto, response);
-
+        LoginResponseDto login = authService.login(loginDto, response);
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()
                         .status(HttpStatus.OK)
                         .data(login)
-                        .message(login.getMemberId() + "님 로그인 성공")
+                        .message(login.getTokenDto().getMemberId() + "님 로그인 완료")
                         .build());
     }
 

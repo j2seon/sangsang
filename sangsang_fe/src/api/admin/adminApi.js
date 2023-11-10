@@ -57,10 +57,26 @@ export const memberList = async (pageInfo)  => {
       });
 };
 
-export const memberUpdate = async (user)  => {
-  const requestUrl = '/api/v1/member/join';
+export const memberUpdate = async (memberId, form)  => {
+  const requestUrl = `/api/v1/member/${memberId}`;
 
-  return await api.post(requestUrl, user )
+  console.log(form)
+  return await api.patch(requestUrl, form)
+    .then(res => {
+      return res.data;
+    })
+    .catch(err => {
+      console.log(err)
+      return err.response;
+    });
+};
+
+
+
+export const memberWithdrawal = async (memberId)  => {
+  const requestUrl = `/api/v1/member/withdrawal/${memberId}`;
+
+  return await api.patch(requestUrl, memberId)
     .then(res => {
       return res.data;
     })

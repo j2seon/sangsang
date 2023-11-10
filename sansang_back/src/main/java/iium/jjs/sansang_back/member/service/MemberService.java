@@ -34,7 +34,6 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final FileUploadUtils fileUploadUtils;
 
     @Value("${files.file-dir}")
     private String FILE_DIR;
@@ -81,11 +80,28 @@ public class MemberService {
     public MemberDto updateMemberInfo(String memberId, MemberInfoDto memberInfoDto){
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("해당 회원이 존재하지 않습니다"));
 
-        // 이거만 따로 정리하기
-        member.setMemberPwd(passwordEncoder.encode(memberInfoDto.getMemberPwd()));
+        // 파일일 경우만 저장
+        // 아닐 경우는 기존의 파일 그대로
+        if(memberInfoDto.isProfileFile()){
+            log.info("memberInfoDto.getProfile()={}", memberInfoDto.getProfile());
+            fileLoad(memberInfoDto.getProfileFile(), member);
+        }
+        // 변경된 내용 저장
         member.setAddress(new Address(memberInfoDto.getZipCode(), memberInfoDto.getAddress(), memberInfoDto.getAddressDetail()));
-        member.setProfile(memberInfoDto.getProfile());
         member.setMemberName(memberInfoDto.getMemberName());
+        member.setAuthority(changeAuth(memberInfoDto.getAuth()));
+
+        return new MemberDto(member);
+    }
+
+    //탈퇴
+    @Transactional
+    public MemberDto withdrawal(String memberId){
+        //해당 회원이 있다면 
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NotFoundMemberException("해당 회원이 존재하지 않습니다"));
+
+        // delete를 추가해줌 -> 접근 제한은 시큐리티에서 delete가 있을 경우 접근 금지설정
+        member.setDeletedAt(LocalDateTime.now());
 
         return new MemberDto(member);
     }
@@ -104,6 +120,17 @@ public class MemberService {
         } catch (IOException e) {
             FileUploadUtils.deleteFile(FILE_DIR, multipartFile.getName());
             throw new FileUploadException("파일 저장 중 오류가 발생했습니다");
+        }
+    }
+
+    private Authority changeAuth(String auth){
+        switch (auth){
+            case "ADMIN":
+                return Authority.ROLE_ADMIN;
+            case "USER":
+                return Authority.ROLE_USER;
+            default:
+                return Authority.ROLE_USER;
         }
     }
 

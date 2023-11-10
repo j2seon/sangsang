@@ -5,22 +5,29 @@ import InputEle from "../../components/common/input/Input";
 import ButtonInline from "../../components/common/button/ButtomInline";
 import Modal from "../../components/common/modal/Modal";
 import DaumPostcode from "react-daum-postcode";
-import {selectMember} from "../../api/admin/adminApi";
+import {memberAdd, memberUpdate, selectMember} from "../../api/admin/adminApi";
 import {useParams} from "react-router-dom";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {LoadingSpinner} from "../../components/common/other/LoadingSpinner";
 import AdminHeader from "../../components/admin/AdminHeader";
 import SelectEle from "../../components/common/select/SelectEle";
 import {changeAuth} from "../../util/validationUtil";
+import {useEdit} from "../../context/EditContext";
+
+
 
 function UserInfo() {
+  const queryClient = useQueryClient();
   const {userId} = useParams();
 
-  const [isEditing, setIsEditing] = useState(false);
+  const {formEdit, setFormEdit, imgEdit, setImgEdit } = useEdit();
+
+  console.log(formEdit)
+
   const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState({
-    memberId: '',
+    memberId: userId,
     memberName: '',
     auth: '',
     profile: '',
@@ -29,26 +36,50 @@ function UserInfo() {
     addressDetail: ''
   });
 
-  const {isLoading, isError, data} = useQuery({
+
+  // 1. 조회용 api 요청
+  const {isPending, isError, data} = useQuery({
     queryKey: [userId],
     queryFn: async () => selectMember(userId),
     staleTime: 60 * 1000,
   })
 
-  useEffect(() => {
-    if (data) {
-      // Update the form state with the data
-      setForm((prev) => ({
-        ...prev,
-        ...data.data, auth: changeAuth(data.data.auth)
-      }));
-    }
-  }, [data, userId]);
+  //2. 수정용 api 요청
+  const mutation = useMutation({
+    mutationFn:  async (data) => memberUpdate(userId, data),
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: [userId] })
+    },
+  })
+
+  console.log()
+  const createFormData = ()=>{
+    setForm((prev)=> ({...prev, memberName:data.data.memberName}));
+
+    console.log(form)
+
+    const formData = new FormData();
+    formData.append('memberName', form.name || data.data.memberName);
+    formData.append('auth', form.auth || data.data.auth);
+    formData.append('zipCode', form.zipCode || data.data.zipCode);
+    formData.append('address', form.address || data.data.address);
+    formData.append('addressDetail', form.addressDetail || data.data.addressDetail);
+    formData.append('profile', form.profile || data.data.profile);
+
+    return formData;
+  }
+
+  const handleRequest = (e) => {
+    e.preventDefault();
+    const formData = createFormData();
+    mutation.mutate(formData);
+    handleEditClick();
+    setImgEdit(!imgEdit);
+  }
 
   const style = {
     maxWidth: '150px'
   }
-
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -58,7 +89,7 @@ function UserInfo() {
     setOpen(false);
   }
   const handleEditClick = () => {
-    setIsEditing(!isEditing);
+    setFormEdit(!formEdit);
   };
 
 
@@ -69,7 +100,6 @@ function UserInfo() {
       ...prevForm,
       [name]: value
     }));
-    console.log(form)
   }
   const handleFile = (file) => {
     setForm((prev) => ({
@@ -96,19 +126,18 @@ function UserInfo() {
     setOpen(false);
   }
 
-  if (isLoading) {
+  if (isPending) {
     return <LoadingSpinner/>;
   }
 
   if (isError) {
-
     return <div> 오류발생! 오류페이지로 대체하자</div>
   }
 
   return (
     <>
       {
-        isEditing ?
+        formEdit ?
           <AdminHeader
             value={"회원수정"}
           />  
@@ -120,8 +149,7 @@ function UserInfo() {
       <div className={styles.container}>
         <ImageInput
           style={style}
-          img={form.profile}
-          isEditing={isEditing}
+          img={data.data.profile}
           onImageChange={handleFile}
         />
         <div className={styles.input_wrap}>
@@ -130,7 +158,7 @@ function UserInfo() {
             <InputEle
               id="memberId"
               name='memberId'
-              value={form.memberId}
+              value={data.data.memberId}
               placeholder="아이디"
               disabled
               onChange={handleChange}
@@ -142,8 +170,9 @@ function UserInfo() {
               id="memberName"
               name='memberName'
               placeholder="이름"
-              value={form.memberName}
-              disabled={!isEditing}
+              defaultValue={data.data.memberName}
+              // value={data.data.memberName}
+              disabled={!formEdit}
               onChange={handleChange}
             />
           </div>
@@ -152,8 +181,9 @@ function UserInfo() {
             <SelectEle
               id="auth"
               name="auth"
-              disabled={!isEditing}
-              value={form.auth}
+              disabled={!formEdit}
+              // value={changeAuth(data.data.auth)}
+              defaultValue={changeAuth(data.data.auth)}
               onChange={handleChange}
               options={[
                 {id:1, value:'ADMIN', text:'관리자'},
@@ -168,11 +198,12 @@ function UserInfo() {
                 id="address"
                 name='address'
                 placeholder="주소"
-                value={form.address}
-                disabled={!isEditing}
+                // value={data.data.address}
+                defaultValue={data.data.address}
+                disabled={!formEdit}
                 onChange={handleChange}
               />
-              {!isEditing ? "" :
+              {!formEdit ? "" :
                 <>
                   <ButtonInline onClick={handleOpenModal} value="검색" style={{width: '100px'}}/>
                   {open && (
@@ -192,19 +223,19 @@ function UserInfo() {
               id="addressDetail"
               name='addressDetail'
               placeholder="상세주소"
-              value={form.addressDetail}
-              disabled={!isEditing}
+              defaultValue={data.data.addressDetail}
+              disabled={!formEdit}
               onChange={handleChange}
             />
           </div>
         </div>
         <div>
           {
-            isEditing ?
+            formEdit ?
               <>
                 <ButtonInline
                   style={{padding: '10px 15px', marginRight: '5px'}}
-                  // onClick={se}
+                  onClick={handleRequest}
                   value='완료'
                 />
                 <ButtonInline

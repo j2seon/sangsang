@@ -17,7 +17,7 @@ export const AuthContextProvider = ({children}) => {
 
     // 유저 내용 담기
     const [user, setUser] = useState({
-        isAuthenticated: !!accessToken,
+        isAuthenticated: !!accessToken ?? false,
         auth: "",
         memberId: "",
         profile: "",

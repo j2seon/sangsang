@@ -1,6 +1,7 @@
 package iium.jjs.sansang_back.member.dto.request;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,10 +13,9 @@ import javax.validation.constraints.NotBlank;
 public class MemberInfoDto {
 
     @NotBlank
-    private String memberPwd;
-
-    @NotBlank
     private String memberName;
+
+    private String auth;
 
     private String zipCode;
 
@@ -23,6 +23,18 @@ public class MemberInfoDto {
 
     private String addressDetail;
 
-    private String profile;
+    private Object profile;
+
+
+    public boolean isProfileFile() {
+        return profile instanceof MultipartFile;
+    }
+    public MultipartFile getProfileFile() {
+        return isProfileFile() ? (MultipartFile) profile : null;
+    }
+
+    public String getProfileString() {
+        return !isProfileFile() ? (String) profile : null;
+    }
 
 }

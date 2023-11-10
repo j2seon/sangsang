@@ -92,7 +92,10 @@ public class MemberController {
     // 회원 정보 수정
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/{memberId}")
-    public ResponseEntity<ResponseDto> updateMemberInfo(@PathVariable String memberId, @Valid @RequestBody MemberInfoDto memberInfoDto){
+    public ResponseEntity<ResponseDto> updateMemberInfo(@PathVariable String memberId, @Valid @ModelAttribute MemberInfoDto memberInfoDto){
+
+
+        log.info(memberId);
 
         MemberDto memberDto = memberService.updateMemberInfo(memberId, memberInfoDto);
 
@@ -105,7 +108,19 @@ public class MemberController {
     }
 
 
+    // 회원 탈퇴 (계정만 잠구기)
+    @PatchMapping("/withdrawal/{memberId}")
+    public ResponseEntity<ResponseDto> withdrawal(@PathVariable String memberId){
 
+        MemberDto memberDto = memberService.withdrawal(memberId);
+
+        return ResponseEntity.ok()
+          .body(ResponseDto.builder()
+            .status(HttpStatus.OK)
+            .message(memberId + " 탈퇴 완료 ")
+            .data(memberDto)
+            .build());
+    }
 
 
 

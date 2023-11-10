@@ -37,12 +37,12 @@ public class MemberDetailImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() { // 계정 만료여부
-        return true;
+        return this.getMember().getDeletedAt() == null;
     }
 
     @Override
     public boolean isAccountNonLocked() { // 계정이 잠겨있는지
-        return true;
+        return this.getMember().getDeletedAt() == null;
     }
 
     @Override
@@ -52,6 +52,6 @@ public class MemberDetailImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() { // 사용가능한 계정인지
-        return true;
+        return this.getMember().getDeletedAt() == null;
     }
 }
