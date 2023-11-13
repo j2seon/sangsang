@@ -30,9 +30,10 @@ function LoginPage() {
         if (!loginUser) {
             return ;
         }
+
         setUser(loginUser);
 
-        if(user?.auth.includes("ADMIN")){
+        if(loginUser.auth.includes("ADMIN")){
             navigate("/admin");
         }else{
             navigate("/");

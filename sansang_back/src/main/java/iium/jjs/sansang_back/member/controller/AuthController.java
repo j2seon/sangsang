@@ -40,6 +40,7 @@ public class AuthController {
 
         LoginResponseDto login = authService.login(loginDto, response);
 
+
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()
                         .status(HttpStatus.OK)
@@ -54,9 +55,7 @@ public class AuthController {
 
         authService.logout(memberDetail.getUsername());
 
-        log.info("Cookie={}", cookie.getValue());
-        log.info("Cookie={}", cookie.getMaxAge());
-        log.info("Cookie={}", cookie.getName());
+        log.info(memberDetail.getUsername());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()

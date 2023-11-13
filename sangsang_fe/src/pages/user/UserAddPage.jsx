@@ -35,6 +35,9 @@ function UserAddPage() {
       navigate("/admin/users");
       return queryClient.invalidateQueries({ queryKey: [form] })
     },
+    onError: () =>{
+
+    }
   })
   const handleChange = (e) => {
     const { value, name } = e.target;

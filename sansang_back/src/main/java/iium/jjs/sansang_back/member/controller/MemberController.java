@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.validation.Valid;
@@ -31,9 +32,8 @@ public class MemberController {
 
     // 가입
     @PostMapping("/join")
-    public ResponseEntity<ResponseDto> register(@Valid @ModelAttribute JoinDto joinDto){
-    log.info("joindto={}",joinDto);
-        memberService.register(joinDto);
+    public ResponseEntity<ResponseDto> register(@Valid @ModelAttribute JoinDto joinDto, @RequestParam(required = false) MultipartFile profile){
+        memberService.register(joinDto, profile);
         log.info("joinDTO={}",joinDto);
 
         return ResponseEntity.ok()

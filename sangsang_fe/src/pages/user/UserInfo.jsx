@@ -60,7 +60,7 @@ function UserInfo() {
 
     const formData = new FormData();
     formData.append('memberName', form.name || data.data.memberName);
-    formData.append('auth', form.auth || data.data.auth);
+    formData.append('auth', form.auth || changeAuth(data.data.auth));
     formData.append('zipCode', form.zipCode || data.data.zipCode);
     formData.append('address', form.address || data.data.address);
     formData.append('addressDetail', form.addressDetail || data.data.addressDetail);
@@ -72,9 +72,10 @@ function UserInfo() {
   const handleRequest = (e) => {
     e.preventDefault();
     const formData = createFormData();
+
     mutation.mutate(formData);
     handleEditClick();
-    setImgEdit(!imgEdit);
+    //setImgEdit(!imgEdit);
   }
 
   const style = {

@@ -1,34 +1,30 @@
-import axios from "axios";
 import {api} from "../customAxios";
+import { message } from 'antd';
 
 export const memberAdd = async (user)  => {
   const requestUrl = '/api/v1/member/join';
 
-  console.log(user)
-  return await api.post(requestUrl, user )
+  return await api.post(requestUrl, user)
     .then(res => {
-      console.log(res)
+      message.success("회원등록완료")
       return res.data;
     })
     .catch(err => {
       console.log(err)
-      return err.response;
+      message.error(err.response.data.message);
+      throw err;
     });
 };
 
 export const selectMember = async (memberId)  => {
   const requestUrl = `api/v1/member/${memberId}`;
-  const headers = {
-    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-  }
-  return await api.get(requestUrl, {
-    headers: headers
-  })
+
+  return await api.get(requestUrl)
     .then(res => {
       return res.data;
     })
     .catch(err => {
-      console.error("요청 실패:", err);
+      message.error(err.response.data.message)
       throw err;
     });
 };
@@ -38,7 +34,6 @@ export const memberList = async (pageInfo)  => {
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   }
-
   return await api.get(requestUrl, {
     headers: headers,
     params : {
@@ -52,7 +47,8 @@ export const memberList = async (pageInfo)  => {
         return res.data.data;
       })
       .catch(err => {
-        console.error("요청 실패:", err);
+        message.error(err.response.data.message)
+        console.log(err)
         throw err;
       });
 };
@@ -63,6 +59,7 @@ export const memberUpdate = async (memberId, form)  => {
   console.log(form)
   return await api.patch(requestUrl, form)
     .then(res => {
+      message.success(res.data.message)
       return res.data;
     })
     .catch(err => {
@@ -72,7 +69,7 @@ export const memberUpdate = async (memberId, form)  => {
 };
 
 
-
+// 탈퇴회원
 export const memberWithdrawal = async (memberId)  => {
   const requestUrl = `/api/v1/member/withdrawal/${memberId}`;
 

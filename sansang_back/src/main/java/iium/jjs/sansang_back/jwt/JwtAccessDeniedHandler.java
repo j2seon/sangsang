@@ -16,6 +16,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"접근 제한");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"권한 없음 접근 제한");
     }
 }

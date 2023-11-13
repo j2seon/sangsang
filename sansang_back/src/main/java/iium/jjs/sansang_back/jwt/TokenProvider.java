@@ -167,6 +167,12 @@ public class TokenProvider {
     String getRefreshToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
+        if (cookies == null) {
+            throw new RefreshTokenException("Cookie 없음");
+        }
+
+        log.info("cookies={}", Arrays.toString(cookies));
+
         return Arrays.stream(cookies)
           .filter(cookie -> cookie.getName().equals("sangRefresh"))
           .findAny()

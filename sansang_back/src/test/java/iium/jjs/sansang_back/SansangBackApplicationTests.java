@@ -50,11 +50,5 @@ class SansangBackApplicationTests {
     }
 
 
-    @Test
-    void test() {
-        JoinDto build = JoinDto.builder()
-                .id("admin").name("admin").pwd("admin").build();
-        memberService.register(build);
-    }
 
 }

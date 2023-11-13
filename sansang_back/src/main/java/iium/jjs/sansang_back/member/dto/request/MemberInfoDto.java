@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class MemberInfoDto {
 
-    @NotBlank
+    @NotBlank(message = "이름은 필수입니다.")
     private String memberName;
 
     private String auth;

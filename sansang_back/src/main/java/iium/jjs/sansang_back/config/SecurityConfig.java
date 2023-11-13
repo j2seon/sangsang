@@ -2,10 +2,7 @@ package iium.jjs.sansang_back.config;
 
 
 import iium.jjs.sansang_back.common.service.RedisService;
-import iium.jjs.sansang_back.jwt.JwtAccessDeniedHandler;
-import iium.jjs.sansang_back.jwt.JwtAuthenticationEntryPoint;
-import iium.jjs.sansang_back.jwt.JwtFilter;
-import iium.jjs.sansang_back.jwt.TokenProvider;
+import iium.jjs.sansang_back.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +28,7 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final JwtFilter jwtFilter;
-
+    private final FilterExceptionFilter filterExceptionFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -62,7 +58,8 @@ public class SecurityConfig {
                 .and()
                 .httpBasic().disable()
                 .formLogin().disable()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filterExceptionFilter, JwtFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and() //예외처리
                 .exceptionHandling()
@@ -70,9 +67,9 @@ public class SecurityConfig {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and() // 인증
                 .authorizeRequests()
-//                .antMatchers("/auth/logout").hasAnyRole("ADMIN","USER")
+                //.antMatchers("/auth/logout").hasAnyRole("ADMIN","USER")
                 .antMatchers("/api/v1/member/*").hasRole("ADMIN")
-                .anyRequest().permitAll() //
+                .anyRequest().permitAll()
                 .and();
         
         return http.build();

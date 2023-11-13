@@ -5,25 +5,20 @@ import {decodeJwt} from "../util/tokenUtil";
 
 const AuthContext = createContext();
 
-const initialState= {
-    isAuthenticated: false,
-    auth: "",
-    memberId: "",
-    profile: "",
-}
 
 export const AuthContextProvider = ({children}) => {
     const accessToken = localStorage.getItem("accessToken");
 
     // 유저 내용 담기
     const [user, setUser] = useState({
-        isAuthenticated: !!accessToken ?? false,
+        isAuthenticated: false,
         auth: "",
-        memberId: "",
+        memberId: '',
         profile: "",
     });
 
     useEffect(() => {
+        console.log("here")
         if (accessToken) {
             const decodeToken = decodeJwt(accessToken);
             const newUser = {

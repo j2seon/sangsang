@@ -14,4 +14,5 @@ public class ApiExceptionDTO {
   private int status;
   private String message;
 
+
 }

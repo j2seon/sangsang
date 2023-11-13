@@ -43,7 +43,7 @@ public class MemberService {
 
     // 회원가입
     @Transactional
-    public void register(JoinDto joinDto) { // 다른 타입 반환해주자
+    public void register(JoinDto joinDto, MultipartFile file) { // 다른 타입 반환해주자
 
         log.info("joinDto {}" , joinDto);
 
@@ -56,7 +56,7 @@ public class MemberService {
                                     .authority(Authority.ROLE_USER)
                                     .build();
 
-        fileLoad(joinDto.getProfile(), newMember);
+        fileLoad(file, newMember);
 
         memberRepository.save(newMember);
         

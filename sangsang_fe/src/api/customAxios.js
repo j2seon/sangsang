@@ -1,19 +1,17 @@
 import axios from "axios";
 import {refresh} from "./auth/authApi";
 
-const ACCESS_TOKEN = "accessToken";
-
 export const api = axios.create({
   baseURL: 'http://localhost:8081',
   headers: {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   },
-  // headers: {"Content-type": "application/json"},
-  //timeout: 10000,
 });
+
 
 api.interceptors.request.use(function (config) {
   // 요청이 전달되기 전에 작업 수행
+  config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
   return config;
 }, function (error) {
 
@@ -25,18 +23,18 @@ api.interceptors.response.use(
     console.log(res)
     return res;
   }, async (error) => {
-    console.log(error)
     const {config, response} = error;
+    const originRequest = config;
 
     if (response.status === 401) {
-      const originRequest = config;
 
-      if(originRequest.url === 'auth/logout'){
-        localStorage.removeItem('accessToken');
-        return Promise.reject(error);
-      }
+      // if(originRequest.url === 'auth/logout'){
+      //   localStorage.removeItem('accessToken');
+      //   return Promise.reject(error);
+      // }
 
       const response = await refresh();
+      console.log(response)
       if (response.status === 200) {
         const newAccessToken = response.data.token;
         localStorage.setItem('accessToken', response.data.token);
@@ -46,7 +44,8 @@ api.interceptors.response.use(
         return axios(originRequest);
       } else if (response.status === 401) {
         localStorage.removeItem('accessToken');
-
+        // 돔을 건드는거라 싫은데..............
+        //window.location.href = '/login';
       }
     }
     return Promise.reject(error);

@@ -2,7 +2,9 @@ package iium.jjs.sansang_back.member.dto.request;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
@@ -13,13 +15,13 @@ import java.time.LocalDateTime;
 @ToString
 public class JoinDto {
 
-    @NotBlank
+    @NotBlank(message = "id는 필수입니다")
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "password는 필수입니다")
     private String pwd;
 
-    @NotBlank
+    @NotBlank(message = "name은 필수입니다.")
     private String name;
 
     private String zipCode;
@@ -28,16 +30,14 @@ public class JoinDto {
 
     private String addressDetail;
 
-    private MultipartFile profile;
 
     @Builder
-    public JoinDto(String id, String pwd, String name, String zipCode, String address, String addressDetail, MultipartFile profile) {
+    public JoinDto(String id, String pwd, String name, String zipCode, String address, String addressDetail) {
         this.id = id;
         this.pwd = pwd;
         this.name = name;
         this.zipCode = zipCode;
         this.address = address;
         this.addressDetail = addressDetail;
-        this.profile = profile;
     }
 }
