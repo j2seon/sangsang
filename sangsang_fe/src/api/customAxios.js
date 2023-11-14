@@ -1,8 +1,9 @@
 import axios from "axios";
 import {refresh} from "./auth/authApi";
+import { message } from 'antd';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:8081',
+  baseURL: process.env.REACT_APP_SERVER_BASE_URL,
   headers: {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   },
@@ -46,6 +47,8 @@ api.interceptors.response.use(
         localStorage.removeItem('accessToken');
         // 돔을 건드는거라 싫은데..............
         //window.location.href = '/login';
+        console.log("d")
+        message.error("다시 로그인 해주세요")
       }
     }
     return Promise.reject(error);

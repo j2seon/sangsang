@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: jjs
     password: 9382
-    url: jdbc:mysql://localhost:3306/sangsang?autoReconnect=true
+    url: jdbc:mysql://118.67.133.100:3306/sangsang?autoReconnect=true
   servlet:
     multipart:
       enabled: true
@@ -28,7 +28,7 @@ spring:
 
   redis:
     port: 6379
-#    host: localhost
+    host: 118.67.133.100
     password: jjs9382
 
   profiles:
@@ -44,9 +44,9 @@ files:
   add-resource-locations: classpath:/static/member/profile/
   add-resource-handler: /member/profile/**
 
-  file-dir: C:/sangsang/member/profile/
+#  file-dir: file:C:sangsang/member/profile/
+  file-dir: file:////sangsang/member/profile/
   file-url: /member/profile/**
-
 
 logging:
   level:
@@ -55,3 +55,8 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+
+---
+
+
+

@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {login, logout} from "../api/auth/authApi";
 import {decodeJwt} from "../util/tokenUtil";
 
@@ -7,8 +7,9 @@ const AuthContext = createContext();
 
 
 export const AuthContextProvider = ({children}) => {
-    const accessToken = localStorage.getItem("accessToken");
-
+    //const accessToken = localStorage.getItem("accessToken");
+    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+    console.log(accessToken)
     // 유저 내용 담기
     const [user, setUser] = useState({
         isAuthenticated: false,
@@ -16,6 +17,7 @@ export const AuthContextProvider = ({children}) => {
         memberId: '',
         profile: "",
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         console.log("here")
@@ -29,9 +31,21 @@ export const AuthContextProvider = ({children}) => {
             };
             setUser(newUser);
         }
-    }, []);
+        setLoading(false)
+    }, [accessToken]);
 
-    return(<AuthContext.Provider value={{user, setUser ,login, logout}}>
+    const contextValue = useMemo(
+      () => ({
+          accessToken,
+          setAccessToken,
+          user,
+          setUser
+      }),
+      [accessToken, user]
+    );
+
+
+    return(<AuthContext.Provider value={{contextValue, login, logout, loading}}>
             {children}
         </AuthContext.Provider>
     );

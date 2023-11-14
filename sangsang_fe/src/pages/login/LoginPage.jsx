@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 function LoginPage() {
     const navigate = useNavigate();
-    const {user, login, setUser} = useAuth();
+    const {contextValue: {user, setUser}, login} = useAuth();
 
     const [form , setForm] = useState({
         id:'',
@@ -26,7 +26,8 @@ function LoginPage() {
 
     const handleSubmit = async () => {
         const loginUser = await login(form);
-        console.log(loginUser)
+        console.log(loginUser);
+
         if (!loginUser) {
             return ;
         }
@@ -40,7 +41,8 @@ function LoginPage() {
         }
     }
 
-    console.log(user)
+    console.log(user);
+
     if(user?.isAuthenticated && !user?.auth.includes("ADMIN")){
         console.log("이동")
         return <Navigate to="/" replace/>;

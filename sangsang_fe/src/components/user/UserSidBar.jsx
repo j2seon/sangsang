@@ -1,12 +1,11 @@
 import React from 'react';
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext";
+import {logout} from "../../api/auth/authApi";
+import styles from "../nav/Sidebar.module.css";
 import SideBarItem from "../nav/SideBarItem";
 import {PersonOutline} from "@mui/icons-material";
 import ButtonInline from "../common/button/ButtomInline";
-import styles from "../nav/Sidebar.module.css";
-import {logout} from "../../api/auth/authApi";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../context/AuthContext";
-
 
 const initialState= {
   isAuthenticated: false,
@@ -15,7 +14,7 @@ const initialState= {
   profile: "",
 }
 
-function AdminSidBar() {
+function UserSidBar(props) {
   const navigate = useNavigate();
   const {contextValue:{setUser}} = useAuth();
   const buttonStyle = {
@@ -24,10 +23,10 @@ function AdminSidBar() {
   };
 
   const handelLogout =  ()=>{
-     logout().then(res=>{
-       setUser(initialState);
-       navigate("/login");
-     })
+    logout().then(res=>{
+      setUser(initialState);
+      navigate("/login");
+    })
   }
 
   return (
@@ -35,8 +34,8 @@ function AdminSidBar() {
       <div className={styles.side_list}>
         <ul>
           <SideBarItem
-            url={"/admin/users"}
-            text="회원관리"
+            url={"/info"}
+            text="내 정보"
             icon={<PersonOutline fontSize="large"/>}
           />
         </ul>
@@ -53,4 +52,4 @@ function AdminSidBar() {
   );
 }
 
-export default AdminSidBar;
+export default UserSidBar;

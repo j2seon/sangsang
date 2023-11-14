@@ -6,6 +6,7 @@ import iium.jjs.sansang_back.exception.dto.ApiExceptionDTO;
 import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,6 +26,8 @@ public class FilterExceptionFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     }catch (TokenException | RefreshTokenException e){
       setErrorResponse(HttpStatus.UNAUTHORIZED, response, e);
+    }catch (DisabledException e){
+      setErrorResponse(HttpStatus.BAD_REQUEST, response, e);
     }
 
   }

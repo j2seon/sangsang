@@ -17,7 +17,7 @@ export const memberAdd = async (user)  => {
 };
 
 export const selectMember = async (memberId)  => {
-  const requestUrl = `api/v1/member/${memberId}`;
+  const requestUrl = `/api/v1/member/${memberId}`;
 
   return await api.get(requestUrl)
     .then(res => {
@@ -30,7 +30,7 @@ export const selectMember = async (memberId)  => {
 };
 
 export const memberList = async (pageInfo)  => {
-  const requestUrl = `api/v1/member/members`;
+  const requestUrl = `/api/v1/member/members`;
   const headers = {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   }

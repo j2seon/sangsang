@@ -5,7 +5,7 @@ import Avatar from "../common/other/Avatar";
 import {useAuth} from "../../context/AuthContext";
 
 export default function TopNav() {
-    const {user} = useAuth();
+    const { contextValue: {user} } = useAuth();
 
 
     return (

@@ -5,8 +5,8 @@ import {Outlet} from "react-router-dom";
 function AdminDashboard() {
   console.log(`한번`)
   return (
-      <main>
-        어드민 메인
+      <main style={{height:'100%', display:'flex', justifyContent:'center'}}>
+        <p style={{fontSize:'2rem', display:'flex', alignItems:'center'}}>ADMIN MAIN PAGE</p>
       </main>
   );
 }

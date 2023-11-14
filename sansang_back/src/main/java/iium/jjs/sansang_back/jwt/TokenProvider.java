@@ -2,7 +2,6 @@ package iium.jjs.sansang_back.jwt;
 
 import iium.jjs.sansang_back.exception.TokenException;
 import iium.jjs.sansang_back.exception.dto.RefreshTokenException;
-import iium.jjs.sansang_back.jwt.dto.TokenDto;
 import iium.jjs.sansang_back.member.dto.MemberDetailImpl;
 import iium.jjs.sansang_back.member.entity.Member;
 import io.jsonwebtoken.*;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.Cookie.SameSite;
 
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -99,6 +99,11 @@ public class TokenProvider {
         String memberId = claims.get(MEMBER_ID).toString();
 
         MemberDetailImpl userDetails = (MemberDetailImpl) userDetailsService.loadUserByUsername(memberId);
+
+        if(!userDetails.isEnabled()){
+            throw new DisabledException("사용할 수 없는 계정입니다.");
+        }
+
         log.info("[TokenProvider] userDetails: ${}/===== ", userDetails);
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());

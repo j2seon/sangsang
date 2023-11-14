@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-          .allowedOrigins("http://localhost:3000")
+          .allowedOrigins("http://localhost:3000", "http://118.67.133.100")
           .allowedHeaders("*")
           .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH");
     }
@@ -46,6 +46,6 @@ public class WebConfig implements WebMvcConfigurer {
           .addResourceLocations(ADD_IMG_RESOURCE_LOCATION);
 
         registry.addResourceHandler(ADD_IMG_URL)
-          .addResourceLocations("file:" + ADD_IMG_DIR);
+          .addResourceLocations(ADD_IMG_DIR);
     }
 }

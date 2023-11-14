@@ -5,7 +5,7 @@ import { message } from 'antd';
 
 const ACCESS_TOKEN = 'accessToken';
 export const login = async (user) => {
-  const requestUrl = 'http://localhost:8081/auth/login';
+  const requestUrl = `${process.env.REACT_APP_SERVER_BASE_URL}/auth/login`;
   const header = {'Content-Type': 'application/json',}
 
   return await axios.post(requestUrl, user, {headers: header})
@@ -35,6 +35,7 @@ export const logout = async () => {
       return res.data;
     })
     .catch(err => {
+      localStorage.removeItem(ACCESS_TOKEN);
       console.log(err)
       return null;
     });
@@ -42,7 +43,7 @@ export const logout = async () => {
 
 
 export const refresh = async () => {
-  const requestUrl = 'http://localhost:8081/auth/reissue';
+  const requestUrl = `${process.env.REACT_APP_SERVER_BASE_URL}/auth/reissue`;
   const header = {'Content-Type': 'application/json',}
 
   return await axios.post(requestUrl, {headers: header})
