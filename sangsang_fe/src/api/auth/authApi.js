@@ -17,7 +17,7 @@ export const login = async (user) => {
       return {isAuthenticated: !!accessToken ,accessToken:accessToken, auth:auth, profile:profile, memberId:memberId }
     })
     .catch(err => {
-      console.log(err.response.data)
+      //console.log(err.response.data)
       const msg = err.response.data.message;
       message.error(msg)
       return null;

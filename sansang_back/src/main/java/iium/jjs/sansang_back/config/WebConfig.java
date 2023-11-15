@@ -46,6 +46,6 @@ public class WebConfig implements WebMvcConfigurer {
           .addResourceLocations(ADD_IMG_RESOURCE_LOCATION);
 
         registry.addResourceHandler(ADD_IMG_URL)
-          .addResourceLocations(ADD_IMG_DIR);
+          .addResourceLocations("file:" + ADD_IMG_DIR);
     }
 }

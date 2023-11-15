@@ -44,8 +44,8 @@ files:
   add-resource-locations: classpath:/static/member/profile/
   add-resource-handler: /member/profile/**
 
-#  file-dir: file:C:sangsang/member/profile/
-  file-dir: file:////sangsang/member/profile/
+  file-dir: C:/sangsang/member/profile/
+#  file-dir: file:////sangsang/member/profile/
   file-url: /member/profile/**
 
 logging:
@@ -56,7 +56,6 @@ logging:
         SQL: debug
         type: trace
 
----
 
 
 
